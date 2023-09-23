@@ -33,7 +33,7 @@ async fn root() -> &'static str {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), lambda_http::Error> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -58,10 +58,7 @@ async fn main() {
         .with_state(pool)
         .with_state(v);
 
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    lambda_http::run(app).await
 }
 
 struct DatabaseConnection(sqlx::pool::PoolConnection<sqlx::Postgres>);
