@@ -44,7 +44,7 @@ export type GetWriterResponseData = {
 
 export async function getCategories(): Promise<GetCategoryResponseData[]> {
 	return (await (
-		await serverFetch(`/categories`, {
+		await serverFetch(`/category`, {
 			method: 'GET'
 		})
 	).json()) as GetCategoryResponseData[];
@@ -52,7 +52,7 @@ export async function getCategories(): Promise<GetCategoryResponseData[]> {
 
 export async function createCategory(name: string): Promise<GetCategoryResponseData> {
 	return (await (
-		await serverFetch(`/categories`, {
+		await serverFetch(`/category`, {
 			method: 'POST',
 			body: JSON.stringify({
 				name
@@ -63,7 +63,7 @@ export async function createCategory(name: string): Promise<GetCategoryResponseD
 
 export async function getPosts(categoryId: number): Promise<GetPostResponseData[]> {
 	return (await (
-		await serverFetch(`/categories/${categoryId}/posts`, {
+		await serverFetch(`/category/${categoryId}/posts`, {
 			method: 'GET'
 		})
 	).json()) as GetPostResponseData[];
@@ -75,7 +75,7 @@ export async function createPost(
 	content: string
 ): Promise<GetPostResponseData> {
 	return (await (
-		await serverFetch(`/categories/${categoryId}/posts`, {
+		await serverFetch(`/category/${categoryId}/posts`, {
 			method: 'POST',
 			body: JSON.stringify({
 				title,
@@ -87,7 +87,7 @@ export async function createPost(
 
 export async function getWriters(): Promise<GetWriterResponseData[]> {
 	return (await (
-		await serverFetch(`/writers`, {
+		await serverFetch(`/writer`, {
 			method: 'GET'
 		})
 	).json()) as GetWriterResponseData[];
@@ -95,7 +95,7 @@ export async function getWriters(): Promise<GetWriterResponseData[]> {
 
 export async function getWriter(writerId: number): Promise<GetWriterResponseData> {
 	return (await (
-		await serverFetch(`/writers/${writerId}`, {
+		await serverFetch(`/writer/${writerId}`, {
 			method: 'GET'
 		})
 	).json()) as GetWriterResponseData;
