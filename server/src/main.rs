@@ -24,8 +24,6 @@ async fn main() -> Result<(), lambda_http::Error> {
         .await
         .expect("can't connect to database");
 
-    let v = "hello world";
-
     let app = Router::new()
         .route("/", get(routers::root::get_hello_world))
         .route("/category", get(routers::category::get_categories))
@@ -33,8 +31,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/category/:category_id/posts",
             get(routers::post::get_category_posts),
         )
-        .with_state(pool)
-        .with_state(v);
+        .with_state(pool);
 
     lambda_http::run(app).await
 }
