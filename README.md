@@ -14,6 +14,8 @@ and a web client written with [SvelteKit](https://kit.svelte.dev/) and [typescri
 cargo lambda watch -p 3000
 ```
 
+and local [cargo-lambda](https://github.com/cargo-lambda/cargo-lambda) server will be running.
+
 ### web-client
 
 ```bash
@@ -21,4 +23,4 @@ yarn
 yarn dev
 ```
 
-now local vite server will be running
+and local vite server will be running.
