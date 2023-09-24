@@ -1,4 +1,5 @@
 mod extractors;
+mod repositories;
 mod routers;
 
 use axum::{routing::get, Router};
@@ -25,11 +26,15 @@ async fn main() -> Result<(), lambda_http::Error> {
         .expect("can't connect to database");
 
     let app = Router::new()
-        .route("/", get(routers::root::get_hello_world))
-        .route("/category", get(routers::category::get_categories))
+        .route("/", get(routers::root::get_hello_world::handler))
+        .route("/category", get(routers::category::get_categories::handler))
         .route(
             "/category/:category_id/posts",
-            get(routers::post::get_category_posts),
+            get(routers::category::get_category_posts::handler),
+        )
+        .route(
+            "/post/:post_id",
+            get(routers::post::get_post_by_post_id::handler),
         )
         .with_state(pool);
 

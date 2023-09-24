@@ -11,6 +11,20 @@ export type GetCategoryResponseData = {
 	createdAt: string;
 };
 
+export type GetCategoryPostsResponseData = Array<{
+	id: number;
+	written_by: {
+		id: number;
+		email: string;
+	};
+	category: {
+		id: string;
+		name: string;
+	};
+	title: string;
+	createdAt: string;
+}>;
+
 export type GetPostResponseData = {
 	id: number;
 	written_by: {
@@ -61,12 +75,20 @@ export async function createCategory(name: string): Promise<GetCategoryResponseD
 	).json()) as GetCategoryResponseData;
 }
 
-export async function getPosts(categoryId: number): Promise<GetPostResponseData[]> {
+export async function getCategoryPosts(categoryId: number): Promise<GetCategoryPostsResponseData> {
 	return (await (
 		await serverFetch(`/category/${categoryId}/posts`, {
 			method: 'GET'
 		})
-	).json()) as GetPostResponseData[];
+	).json()) as GetCategoryPostsResponseData;
+}
+
+export async function getPost(postId: number): Promise<GetPostResponseData> {
+	return (await (
+		await serverFetch(`/post/${postId}`, {
+			method: 'GET'
+		})
+	).json()) as GetPostResponseData;
 }
 
 export async function createPost(
