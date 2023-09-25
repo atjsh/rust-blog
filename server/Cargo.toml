@@ -29,3 +29,4 @@ sqlx = { version = "0.7.1", features = [
 tokio = { version = "1.32.0", features = ["full"] }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
+axum-extra = { version = "0.8.0", features = ["cookie", "cookie-signed"] }
