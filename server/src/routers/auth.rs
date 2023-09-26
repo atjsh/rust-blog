@@ -11,7 +11,6 @@ pub mod get_auth_cookie {
 
     struct WriterRow {
         id: i64,
-        email: String,
     }
 
     const ACCESS_TOKEN_COOKIE_NAME: &str = "access_token";
@@ -29,7 +28,7 @@ pub mod get_auth_cookie {
 
         let result = sqlx::query_as!(
             WriterRow,
-            "select id, email from writer where email = $1",
+            "select id from writer where email = $1",
             payload.email
         )
         .fetch_one(&mut *conn)

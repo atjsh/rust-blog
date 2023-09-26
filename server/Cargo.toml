@@ -15,7 +15,7 @@ panic = "abort"
 
 [dependencies]
 lambda_http = { version = "0.8.1" }
-axum = { version = "0.6.20", features = ["tracing"] }
+axum = { version = "0.6.20", features = ["tracing", "macros"] }
 chrono = { version = "0.4.31", features = ["serde"] }
 serde = { version = "1.0.188", features = ["derive"] }
 serde_json = "1.0.107"
@@ -30,3 +30,4 @@ tokio = { version = "1.32.0", features = ["full"] }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
 axum-extra = { version = "0.8.0", features = ["cookie", "cookie-signed"] }
+axum-macros = "0.3.8"

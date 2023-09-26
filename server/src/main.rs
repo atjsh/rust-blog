@@ -13,17 +13,10 @@ use std::time::Duration;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 // our application state
-#[derive(Clone)]
-struct AppState {
-    // that holds the key used to sign cookies
-    key: Key,
-}
-
-// this impl tells `SignedCookieJar` how to access the key from our state
-impl FromRef<AppState> for Key {
-    fn from_ref(state: &AppState) -> Self {
-        state.key.clone()
-    }
+#[derive(Clone, FromRef)]
+pub struct AppState {
+    cookie_secret_key: Key,
+    pg_pool: sqlx::PgPool,
 }
 
 #[tokio::main]
@@ -37,17 +30,19 @@ async fn main() -> Result<(), lambda_http::Error> {
 
     let db_connection_str = std::env::var("DATABASE_URL").unwrap();
 
-    let state = AppState {
-        // key: Key::from("my secret key".as_bytes()),
-        key: Key::generate(),
-    };
-
-    let pool = PgPoolOptions::new()
+    let pg_pool = PgPoolOptions::new()
         .max_connections(5)
         .acquire_timeout(Duration::from_secs(3))
         .connect(&db_connection_str)
         .await
         .expect("can't connect to database");
+
+    let cookit_secret_key_string = std::env::var("COOKIE_SECRET").unwrap();
+
+    let state = AppState {
+        cookie_secret_key: Key::from(cookit_secret_key_string.as_bytes()),
+        pg_pool,
+    };
 
     let app = Router::new()
         .route("/", get(routers::root::get_hello_world::handler))
@@ -61,7 +56,6 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::post::get_post_by_post_id::handler),
         )
         .route("/auth", post(routers::auth::get_auth_cookie::handler))
-        .with_state(pool)
         .with_state(state);
 
     lambda_http::run(app).await
