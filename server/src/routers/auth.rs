@@ -13,7 +13,7 @@ pub mod get_auth_cookie {
         id: i64,
     }
 
-    const ACCESS_TOKEN_COOKIE_NAME: &str = "access_token";
+    pub const ACCESS_TOKEN_COOKIE_NAME: &str = "access_token";
 
     pub async fn handler(
         DatabaseConnection(mut conn): DatabaseConnection,

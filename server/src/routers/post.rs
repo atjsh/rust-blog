@@ -98,12 +98,32 @@ pub mod get_post_by_post_id {
 }
 
 pub mod create_post {
+    use axum::Json;
+    use axum_extra::extract::SignedCookieJar;
+
+    use crate::routers::auth::get_auth_cookie::ACCESS_TOKEN_COOKIE_NAME;
+
     use super::*;
 
     #[derive(Deserialize)]
-    struct CreatePostBody {
+    pub struct CreatePostBody {
         title: String,
         content: String,
         category_id: i64,
+    }
+
+    pub async fn handler(
+        DatabaseConnection(mut conn): DatabaseConnection,
+        jar: SignedCookieJar,
+        Json(payload): Json<CreatePostBody>,
+    ) -> Result<impl IntoResponse, StatusCode> {
+        let access_token_cookie = jar.get(ACCESS_TOKEN_COOKIE_NAME);
+
+        let writer_id = match access_token_cookie {
+            Some(cookie) => cookie.value().to_string(),
+            None => return Err(StatusCode::UNAUTHORIZED),
+        };
+
+        //
     }
 }

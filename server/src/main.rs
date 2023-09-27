@@ -55,6 +55,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/post/:post_id",
             get(routers::post::get_post_by_post_id::handler),
         )
+        .route("/post", post(routers::post::create_post::handler))
         .route("/auth", post(routers::auth::get_auth_cookie::handler))
         .with_state(state);
 
