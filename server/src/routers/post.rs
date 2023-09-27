@@ -123,7 +123,5 @@ pub mod create_post {
             Some(cookie) => cookie.value().to_string(),
             None => return Err(StatusCode::UNAUTHORIZED),
         };
-
-        //
     }
 }
