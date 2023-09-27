@@ -46,7 +46,7 @@ pub mod get_category_posts {
             "select id, title, content, created_at from post where category_id = $1",
             category_id
         )
-        .fetch_one(&mut *conn)
+        .fetch_all(&mut *conn)
         .await
         .unwrap();
 

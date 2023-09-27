@@ -1,6 +1,8 @@
 pub mod get_auth_cookie {
+
     use axum::{extract::Json, http::StatusCode, response::IntoResponse};
     use axum_extra::extract::{cookie::Cookie, SignedCookieJar};
+    use cookie::time::{Duration, OffsetDateTime};
 
     use crate::extractors::DatabaseConnection;
 
@@ -40,7 +42,14 @@ pub mod get_auth_cookie {
 
         let writer = result.unwrap();
 
-        let jar = jar.add(Cookie::new(ACCESS_TOKEN_COOKIE_NAME, writer.id.to_string()));
+        let mut now = OffsetDateTime::now_utc();
+        now += Duration::weeks(52);
+
+        let mut auth_cookie = Cookie::new(ACCESS_TOKEN_COOKIE_NAME, writer.id.to_string());
+
+        auth_cookie.set_expires(now);
+
+        let jar = jar.add(auth_cookie);
 
         Ok((jar, StatusCode::OK))
     }

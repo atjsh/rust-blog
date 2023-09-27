@@ -1525,6 +1525,7 @@ dependencies = [
  "axum-extra",
  "axum-macros",
  "chrono",
+ "cookie",
  "lambda_http",
  "serde",
  "serde_json",
