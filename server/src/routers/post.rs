@@ -2,7 +2,7 @@ use axum::{extract::Path, http::StatusCode, response::IntoResponse};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
-use crate::extractors::DatabaseConnection;
+use crate::extractors::{AuthedWriter, DatabaseConnection};
 
 pub mod get_post_by_post_id {
     use super::*;
@@ -99,9 +99,6 @@ pub mod get_post_by_post_id {
 
 pub mod create_post {
     use axum::Json;
-    use axum_extra::extract::SignedCookieJar;
-
-    use crate::routers::auth::get_auth_cookie::ACCESS_TOKEN_COOKIE_NAME;
 
     use super::*;
 
@@ -171,16 +168,11 @@ pub mod create_post {
     }
 
     pub async fn handler(
+        authed_writer: AuthedWriter,
         DatabaseConnection(mut conn): DatabaseConnection,
-        jar: SignedCookieJar,
         Json(payload): Json<CreatePostBody>,
     ) -> Result<impl IntoResponse, StatusCode> {
-        let access_token_cookie = jar.get(ACCESS_TOKEN_COOKIE_NAME);
-
-        let writer_id: i32 = match access_token_cookie {
-            Some(cookie) => cookie.value().parse().unwrap(),
-            None => return Err(StatusCode::UNAUTHORIZED),
-        };
+        let writer_id = authed_writer.id;
 
         let post = sqlx::query_as!(
             GetPostByPostIdRow,
@@ -195,10 +187,10 @@ pub mod create_post {
                 p.title,
                 p.content,
                 p.created_at,
-                u.id as "written_by_id!",
-                u.email as "written_by_email!",
-                c.id as "category_id!",
-                c.name as "category_name!"
+                u.id as "written_by_id",
+                u.email as "written_by_email",
+                c.id as "category_id",
+                c.name as "category_name"
             from inserted p
             inner join writer u on u.id = p.written_by_id
             inner join category c on c.id = p.category_id
@@ -213,5 +205,7 @@ pub mod create_post {
         .unwrap();
 
         Ok(axum::Json(post.into_nested_post_info()))
+
+        // Ok(StatusCode::OK)
     }
 }
