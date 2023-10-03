@@ -17,16 +17,14 @@ pub struct AuthedWriter {
     pub description: String,
 }
 
-fn unauthorized(jar: SignedCookieJar) -> (StatusCode, SignedCookieJar, String) {
-    (StatusCode::UNAUTHORIZED, jar, "Unauthorized".to_string())
+type CookieAssigningResponse = (StatusCode, SignedCookieJar, String);
+
+fn unauthorized(jar: SignedCookieJar) -> CookieAssigningResponse {
+    (StatusCode::UNAUTHORIZED, jar, "".to_string())
 }
 
-fn service_unavailable(jar: SignedCookieJar) -> (StatusCode, SignedCookieJar, String) {
-    (
-        StatusCode::SERVICE_UNAVAILABLE,
-        jar,
-        "Service Temporarily Unavailable".to_string(),
-    )
+fn service_unavailable(jar: SignedCookieJar) -> CookieAssigningResponse {
+    (StatusCode::SERVICE_UNAVAILABLE, jar, "".to_string())
 }
 
 #[async_trait]
@@ -36,7 +34,7 @@ where
     Key: FromRef<S> + Into<Key>,
     PgPool: FromRef<S>,
 {
-    type Rejection = (StatusCode, SignedCookieJar<Key>, String);
+    type Rejection = CookieAssigningResponse;
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let jar: SignedCookieJar = SignedCookieJar::<Key>::from_request_parts(parts, state)
