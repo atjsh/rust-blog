@@ -1,3 +1,4 @@
+mod env_values;
 mod extractors;
 mod repositories;
 mod routers;
@@ -28,7 +29,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .with(tracing_subscriber::fmt::layer());
 
-    let db_connection_str = std::env::var("DATABASE_URL").unwrap();
+    let db_connection_str = std::env::var(env_values::DATABASE_URL).unwrap();
 
     let pg_pool = PgPoolOptions::new()
         .max_connections(5)
@@ -37,7 +38,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         .await
         .expect("can't connect to database");
 
-    let cookit_secret_key_string = std::env::var("COOKIE_SECRET").unwrap();
+    let cookit_secret_key_string = std::env::var(env_values::COOKIE_SECRET).unwrap();
 
     let state = AppState {
         cookie_secret_key: Key::from(cookit_secret_key_string.as_bytes()),
