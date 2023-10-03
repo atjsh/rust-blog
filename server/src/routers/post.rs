@@ -205,7 +205,5 @@ pub mod create_post {
         .unwrap();
 
         Ok(axum::Json(post.into_nested_post_info()))
-
-        // Ok(StatusCode::OK)
     }
 }

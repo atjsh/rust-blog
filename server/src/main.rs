@@ -13,7 +13,6 @@ use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
-// our application state
 #[derive(Clone, FromRef)]
 pub struct AppState {
     cookie_secret_key: Key,
