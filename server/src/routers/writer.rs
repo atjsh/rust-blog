@@ -53,8 +53,8 @@ pub mod update_writer {
 
     #[derive(Deserialize, Serialize)]
     pub struct UpdateWriterRequest {
-        email: String,
-        description: String,
+        email: Option<String>,
+        description: Option<String>,
     }
 
     pub async fn handler(
@@ -65,7 +65,7 @@ pub mod update_writer {
         sqlx::query!(
             r#"
             UPDATE writer
-            SET email = $1, description = $2
+            SET email = COALESCE($1, email), description = COALESCE($2, description)
             WHERE id = $3
             "#,
             body.email,
@@ -81,6 +81,6 @@ pub mod update_writer {
             )
         })?;
 
-        Ok(axum::Json(()))
+        Ok(StatusCode::OK)
     }
 }
