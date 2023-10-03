@@ -4,6 +4,7 @@ use axum::{
     http::{request::Parts, StatusCode},
 };
 use axum_extra::extract::SignedCookieJar;
+use cookie::Key;
 use sqlx::PgPool;
 
 use super::DatabaseConnection;
@@ -21,16 +22,16 @@ fn unauthorized() -> (StatusCode, String) {
 #[async_trait]
 impl<S> FromRequestParts<S> for AuthedWriter
 where
-    SignedCookieJar: FromRequestParts<S>,
-    PgPool: FromRef<S>,
     S: Send + Sync,
+    Key: FromRef<S> + Into<Key>,
+    PgPool: FromRef<S>,
 {
     type Rejection = (StatusCode, String);
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        let jar = SignedCookieJar::from_request_parts(parts, state)
+        let jar = SignedCookieJar::<Key>::from_request_parts(parts, state)
             .await
-            .map_err(|_| unauthorized())?;
+            .unwrap();
 
         let cookie = jar.get("access_token");
 
