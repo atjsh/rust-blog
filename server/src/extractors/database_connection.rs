@@ -5,11 +5,8 @@ use axum::{
 };
 use sqlx::PgPool;
 
-fn internal_error<E>(err: E) -> (StatusCode, String)
-where
-    E: std::error::Error,
-{
-    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+fn internal_error() -> (StatusCode, String) {
+    (StatusCode::INTERNAL_SERVER_ERROR, "".to_string())
 }
 
 pub struct DatabaseConnection(pub sqlx::pool::PoolConnection<sqlx::Postgres>);
@@ -25,7 +22,7 @@ where
     async fn from_request_parts(_parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let pool = PgPool::from_ref(state);
 
-        let conn = pool.acquire().await.map_err(internal_error)?;
+        let conn = pool.acquire().await.map_err(|_| internal_error())?;
 
         Ok(Self(conn))
     }
