@@ -1,5 +1,10 @@
 # Making a blog web app with SvelteKit and axum
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png" width="100px" title="Rustlang logo">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Svelte-kit-horizontal.svg/2560px-Svelte-kit-horizontal.svg.png"  height="100px" title="Rustlang logo">
+
+<hr>
+
 This is my side project.
 
 It consists of two parts:
