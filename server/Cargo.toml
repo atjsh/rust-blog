@@ -32,3 +32,4 @@ tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
 axum-extra = { version = "0.8.0", features = ["cookie", "cookie-signed"] }
 axum-macros = "0.3.8"
 cookie = "0.17.0"
+tower-http = { version = "0.4.4", features = ["cors"] }

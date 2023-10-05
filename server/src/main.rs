@@ -5,12 +5,14 @@ mod routers;
 
 use axum::{
     extract::FromRef,
+    http::{HeaderValue, Method},
     routing::{get, patch, post},
     Router,
 };
 use axum_extra::extract::cookie::Key;
 use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
+use tower_http::cors::CorsLayer;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, FromRef)]
@@ -44,6 +46,16 @@ async fn main() -> Result<(), lambda_http::Error> {
         pg_pool,
     };
 
+    let cors = CorsLayer::new()
+        .allow_methods([Method::GET, Method::POST])
+        .allow_origin(
+            std::env::var(env_values::WEB_CLIENT_URL)
+                .unwrap()
+                .parse::<HeaderValue>()
+                .unwrap(),
+        )
+        .allow_credentials(true);
+
     let app = Router::new()
         .route("/", get(routers::root::get_hello_world::handler))
         .route("/category", get(routers::category::get_categories::handler))
@@ -62,6 +74,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::writer::get_writer_by_writer_id::handler),
         )
         .route("/profile", patch(routers::writer::update_writer::handler))
+        .layer(cors)
         .with_state(state);
 
     lambda_http::run(app).await
