@@ -14,7 +14,7 @@
 <div>
 	<ul>
 		<li>
-			writer: {data.post.written_by.email}
+			<a href="/writer/{data.post.written_by.id}"> writer: {data.post.written_by.email}</a>
 		</li>
 		<li>
 			category: {data.post.category.name}

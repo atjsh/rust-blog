@@ -60,6 +60,10 @@ async fn main() -> Result<(), lambda_http::Error> {
         .route("/", get(routers::root::get_hello_world::handler))
         .route("/category", get(routers::category::get_categories::handler))
         .route(
+            "/category/:category_id",
+            get(routers::category::get_category::handler),
+        )
+        .route(
             "/category/:category_id/posts",
             get(routers::category::get_category_posts::handler),
         )
@@ -74,7 +78,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::writer::get_writer_by_writer_id::handler),
         )
         .route(
-            "/writer/:writer_id/post",
+            "/writer/:writer_id/posts",
             get(routers::writer::get_posts_by_writer_id::handler),
         )
         .route("/profile", patch(routers::writer::update_writer::handler))

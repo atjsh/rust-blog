@@ -85,6 +85,14 @@ export async function getCategories(): Promise<GetCategoryResponseData[]> {
 	).json()) as GetCategoryResponseData[];
 }
 
+export async function getCategory(categoryId: number): Promise<GetCategoryResponseData> {
+	return (await (
+		await serverFetch(`/category/${categoryId}`, {
+			method: 'GET'
+		})
+	).json()) as GetCategoryResponseData;
+}
+
 export async function getCategoryPosts(categoryId: number): Promise<GetCategoryPostsResponseData> {
 	return (await (
 		await serverFetch(`/category/${categoryId}/posts`, {

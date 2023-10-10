@@ -26,6 +26,33 @@ pub mod get_categories {
     }
 }
 
+pub mod get_category {
+    use super::*;
+
+    #[derive(Deserialize, Serialize)]
+    struct GetCategoryRow {
+        id: i64,
+        name: String,
+        created_at: NaiveDateTime,
+    }
+
+    pub async fn handler(
+        DatabaseConnection(mut conn): DatabaseConnection,
+        Path(category_id): Path<i32>,
+    ) -> Result<impl IntoResponse, (StatusCode, String)> {
+        let result = sqlx::query_as!(
+            GetCategoryRow,
+            "select id, name, created_at from category where id = $1",
+            category_id
+        )
+        .fetch_one(&mut *conn)
+        .await
+        .unwrap();
+
+        Ok(axum::Json(result))
+    }
+}
+
 pub mod get_category_posts {
     use super::*;
 
