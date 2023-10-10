@@ -4,9 +4,33 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
+		<style>
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+					helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+			}
+			main {
+				max-width: 38rem;
+				padding: 2rem;
+				margin: auto;
+				min-height: 60vh;
+			}
+			footer,
+			footer a {
+				margin-top: 3em;
+				text-align: center;
+				color: gray;
+			}
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<main>
+			<header>
+				<a href="/">This is rust-blog</a>
+			</header>
+			<div>%sveltekit.body%</div>
+			<footer>2023 ATJSH. All rights reserved</footer>
+		</main>
 	</body>
 </html>

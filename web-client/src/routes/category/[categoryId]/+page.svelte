@@ -4,11 +4,11 @@
 	export let data: PageData;
 </script>
 
-<h1>Welcome to rust-blog</h1>
+<h1>Category</h1>
 <ul>
-	{#each data.categories as category}
+	{#each data.posts as post}
 		<li>
-			<a href={`/category/${category.id}`}>{category.name}</a>
+			<a href={`/post/${post.id}`}>{post.title}</a>
 		</li>
 	{/each}
 </ul>

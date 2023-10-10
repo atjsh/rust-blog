@@ -19,14 +19,14 @@ const serverFetch = returnFetch({
 export type GetCategoryResponseData = {
 	id: number;
 	name: string;
-	createdAt: string;
+	created_at: string;
 };
 
 export type GetCategoryPostsResponseData = Array<{
 	id: number;
 
 	title: string;
-	createdAt: string;
+	created_at: string;
 
 	written_by: {
 		id: number;
@@ -43,7 +43,7 @@ export type GetPostResponseData = {
 
 	title: string;
 	content: string;
-	createdAt: string;
+	created_at: string;
 
 	written_by: {
 		id: number;
@@ -59,7 +59,7 @@ export type GetWriterPostResponseData = Array<{
 	id: number;
 
 	title: string;
-	createdAt: string;
+	created_at: string;
 
 	written_by: {
 		id: number;
