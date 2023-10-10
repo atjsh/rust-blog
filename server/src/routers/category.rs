@@ -29,12 +29,62 @@ pub mod get_categories {
 pub mod get_category_posts {
     use super::*;
 
-    #[derive(Deserialize, Serialize)]
     struct GetPostByCategoryRow {
         id: i64,
+
         title: String,
-        content: String,
         created_at: NaiveDateTime,
+
+        written_by_id: i64,
+        written_by_email: String,
+
+        category_id: i64,
+        category_name: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByCategoryResponse {
+        id: i64,
+
+        title: String,
+        created_at: NaiveDateTime,
+
+        written_by: GetPostByPostIdResponseWrittenBy,
+
+        category: GetPostByPostIdResponseCategory,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseWrittenBy {
+        id: i64,
+        email: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseCategory {
+        id: i64,
+        name: String,
+    }
+
+    impl From<GetPostByCategoryRow> for GetPostByCategoryResponse {
+        fn from(row: GetPostByCategoryRow) -> Self {
+            Self {
+                id: row.id,
+
+                title: row.title,
+                created_at: row.created_at,
+
+                written_by: GetPostByPostIdResponseWrittenBy {
+                    id: row.written_by_id,
+                    email: row.written_by_email,
+                },
+
+                category: GetPostByPostIdResponseCategory {
+                    id: row.category_id,
+                    name: row.category_name,
+                },
+            }
+        }
     }
 
     pub async fn handler(
@@ -43,13 +93,31 @@ pub mod get_category_posts {
     ) -> Result<impl IntoResponse, (StatusCode, String)> {
         let result = sqlx::query_as!(
             GetPostByCategoryRow,
-            "select id, title, content, created_at from post where category_id = $1",
+            r#"
+            select
+                post.id,
+                post.title,
+                post.created_at,
+                post.written_by_id,
+                writer.email as written_by_email,
+                post.category_id,
+                category.name as category_name
+            from post
+            inner join writer on post.written_by_id = writer.id
+            inner join category on post.category_id = category.id
+            where post.category_id = $1
+            "#,
             category_id
         )
         .fetch_all(&mut *conn)
         .await
         .unwrap();
 
-        Ok(axum::Json(result))
+        Ok(axum::Json(
+            result
+                .into_iter()
+                .map(|row| row.into())
+                .collect::<Vec<GetPostByCategoryResponse>>(),
+        ))
     }
 }

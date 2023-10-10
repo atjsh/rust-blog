@@ -73,6 +73,10 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
         )
+        .route(
+            "/writer/:writer_id/post",
+            get(routers::writer::get_posts_by_writer_id::handler),
+        )
         .route("/profile", patch(routers::writer::update_writer::handler))
         .layer(cors)
         .with_state(state);

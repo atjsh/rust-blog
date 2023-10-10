@@ -1,4 +1,5 @@
 use axum::{extract::Path, http::StatusCode, response::IntoResponse, Json};
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 use crate::extractors::{AuthedWriter, DatabaseConnection};
@@ -45,6 +46,95 @@ pub mod get_writer_by_writer_id {
             .ok_or((StatusCode::NOT_FOUND, "writer not found".to_string()))
         })
         .unwrap()
+    }
+}
+
+pub mod get_posts_by_writer_id {
+    use super::*;
+
+    struct GetPostByWriterRow {
+        id: i64,
+
+        title: String,
+        created_at: NaiveDateTime,
+
+        written_by_id: i64,
+        written_by_email: String,
+
+        category_id: i64,
+        category_name: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByWriterResponse {
+        id: i64,
+
+        title: String,
+        created_at: NaiveDateTime,
+
+        written_by: GetPostByPostIdResponseWrittenBy,
+
+        category: GetPostByPostIdResponseCategory,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseWrittenBy {
+        id: i64,
+        email: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseCategory {
+        id: i64,
+        name: String,
+    }
+
+    impl From<GetPostByWriterRow> for GetPostByWriterResponse {
+        fn from(row: GetPostByWriterRow) -> Self {
+            Self {
+                id: row.id,
+
+                title: row.title,
+                created_at: row.created_at,
+
+                written_by: GetPostByPostIdResponseWrittenBy {
+                    id: row.written_by_id,
+                    email: row.written_by_email,
+                },
+
+                category: GetPostByPostIdResponseCategory {
+                    id: row.category_id,
+                    name: row.category_name,
+                },
+            }
+        }
+    }
+
+    pub async fn handler(
+        DatabaseConnection(mut conn): DatabaseConnection,
+        Path(writer_id): Path<i32>,
+    ) -> Result<impl IntoResponse, (StatusCode, String)> {
+        let result = sqlx::query_as!(
+            GetPostByWriterRow,
+            r#"
+            SELECT post.id, post.title, post.created_at, post.written_by_id, writer.email AS written_by_email, post.category_id, category.name AS category_name
+            FROM post
+            INNER JOIN writer ON post.written_by_id = writer.id
+            INNER JOIN category ON post.category_id = category.id
+            WHERE post.written_by_id = $1
+            "#,
+            writer_id
+        )
+        .fetch_all(&mut *conn)
+        .await
+        .unwrap();
+
+        Ok(axum::Json(
+            result
+                .into_iter()
+                .map(|row| row.into())
+                .collect::<Vec<GetPostByWriterResponse>>(),
+        ))
     }
 }
 
