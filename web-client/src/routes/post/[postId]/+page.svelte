@@ -17,9 +17,6 @@
 			<a href="/writer/{data.post.written_by.id}"> writer: {data.post.written_by.email}</a>
 		</li>
 		<li>
-			category: {data.post.category.name}
-		</li>
-		<li>
 			published at: {new Date(data.post.created_at).toLocaleString('ko-KR')}
 		</li>
 	</ul>
