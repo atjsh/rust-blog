@@ -4,7 +4,7 @@
 	export let data: PageData;
 </script>
 
-<h1>Writer {data.writer.email}</h1>
+<h1>Writer: {data.writer.email}</h1>
 
 <p>self introduce: {data.writer.description}</p>
 
