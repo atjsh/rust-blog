@@ -5,6 +5,7 @@
 </script>
 
 <h1>Welcome to rust-blog</h1>
+
 <ul>
 	{#each data.categories as category}
 		<li>

@@ -29,6 +29,7 @@
   },
   "type": "module",
   "dependencies": {
-    "return-fetch": "^0.4.5"
+    "return-fetch": "^0.4.5",
+    "svelte-persisted-store": "^0.7.0"
   }
 }
