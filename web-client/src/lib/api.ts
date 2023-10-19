@@ -77,6 +77,19 @@ export type GetWriterResponseData = {
 	description: string;
 };
 
+export async function getAuthed(): Promise<boolean> {
+	try {
+		await serverFetch(`/auth`, {
+			method: 'PUT'
+		});
+
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+}
+
 export async function getCategories(): Promise<GetCategoryResponseData[]> {
 	return (await (
 		await serverFetch(`/category`, {

@@ -6,7 +6,7 @@ mod routers;
 use axum::{
     extract::FromRef,
     http::{HeaderValue, Method},
-    routing::{get, patch, post},
+    routing::{get, patch, post, put},
     Router,
 };
 use axum_extra::extract::cookie::Key;
@@ -72,7 +72,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::post::get_post_by_post_id::handler),
         )
         .route("/post", post(routers::post::create_post::handler))
-        .route("/auth", post(routers::auth::get_auth_cookie::handler))
+        .route("/auth", put(routers::auth::get_auth_cookie::handler))
         .route(
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
