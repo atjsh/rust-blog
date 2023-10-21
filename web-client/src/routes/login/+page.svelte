@@ -4,7 +4,7 @@
 	import JsCookie from 'js-cookie';
 	import { getAuthed } from '../../lib/api';
 
-	export let result = '';
+	let loginAttemptResult = '';
 
 	async function sendAuth(event: { currentTarget: EventTarget & HTMLFormElement }) {
 		const data = new FormData(event.currentTarget);
@@ -14,7 +14,6 @@
 		});
 
 		if (authResult) {
-			result = 'success';
 			JsCookie.set('authed', 'true', {
 				domain: PUBLIC_WEB_CLIENT_URL,
 				expires: 30
@@ -23,7 +22,7 @@
 			await invalidateAll();
 			goto('/');
 		} else {
-			result = 'failed';
+			loginAttemptResult = 'failed';
 		}
 	}
 </script>
@@ -31,7 +30,19 @@
 <main>
 	<h1>Login</h1>
 	<form on:submit|preventDefault={sendAuth}>
-		<input type="email" id="email" name="email" required placeholder="e-mail" />
+		<input
+			type="email"
+			id="email"
+			name="email"
+			required
+			placeholder="e-mail"
+			on:input={() => {
+				loginAttemptResult = '';
+			}}
+		/>
 		<button type="submit">Login</button>
 	</form>
+	{#if loginAttemptResult === 'failed'}
+		<p style="color: red">⚠️ Failed to login; Check E-mail address</p>
+	{/if}
 </main>
