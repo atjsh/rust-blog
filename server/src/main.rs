@@ -96,6 +96,10 @@ async fn main() {
         .route("/auth", put(routers::auth::get_auth_cookie::handler))
         .route("/auth", delete(routers::auth::remove_auth_cookie::handler))
         .route(
+            "/auth/access-token",
+            get(routers::auth::get_access_token::handler),
+        )
+        .route(
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
         )

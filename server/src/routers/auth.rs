@@ -106,3 +106,65 @@ pub mod get_writer_id_from_auth_cookie {
         Ok(writer_id)
     }
 }
+
+// generate 1 year access token, encoded in jwt
+pub mod get_access_token {
+    use axum::{response::IntoResponse, Json};
+    use chrono::Utc;
+    use http::StatusCode;
+    use jsonwebtoken::{encode, EncodingKey};
+    use serde::{Deserialize, Serialize};
+
+    use crate::{env_values, extractors::DatabaseConnection};
+
+    #[derive(serde::Deserialize)]
+    pub struct AuthBody {
+        email: String,
+    }
+
+    struct WriterRow {
+        id: i64,
+    }
+
+    #[derive(Debug, Serialize, Deserialize)]
+    struct Claims {
+        sub: String,
+        exp: u64,
+    }
+
+    pub async fn handler(
+        DatabaseConnection(mut conn): DatabaseConnection,
+        Json(payload): Json<AuthBody>,
+    ) -> Result<impl IntoResponse, StatusCode> {
+        let result = sqlx::query_as!(
+            WriterRow,
+            "select id from writer where email = $1",
+            payload.email
+        )
+        .fetch_one(&mut *conn)
+        .await;
+
+        if result.is_err() {
+            return Err(StatusCode::UNAUTHORIZED);
+        };
+
+        let writer = result.unwrap();
+
+        println!("writer: {:?}", writer.id);
+
+        let mut expire_date = Utc::now();
+        expire_date += chrono::Duration::days(365);
+
+        let claims = Claims {
+            sub: writer.id.to_string(),
+            exp: expire_date.timestamp() as u64,
+        };
+        let token = encode(
+            &jsonwebtoken::Header::new(jsonwebtoken::Algorithm::HS256),
+            &claims,
+            &EncodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),
+        );
+
+        Ok(token.unwrap())
+    }
+}
