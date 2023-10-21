@@ -1,4 +1,4 @@
-import { getCategories } from '../lib/api';
+import { getCategories } from '$lib/api';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {

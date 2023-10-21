@@ -2,7 +2,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { PUBLIC_WEB_CLIENT_URL } from '$env/static/public';
 	import JsCookie from 'js-cookie';
-	import { getAuthed } from '../../lib/api';
+	import { getAuthed } from '$lib/api';
 
 	let loginAttemptResult = '';
 
