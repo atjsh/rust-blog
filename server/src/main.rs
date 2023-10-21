@@ -103,6 +103,10 @@ async fn main() {
             "/writer/:writer_id/posts",
             get(routers::writer::get_posts_by_writer_id::handler),
         )
+        .route(
+            "/profile",
+            get(routers::auth::get_writer_id_from_auth_cookie::handler),
+        )
         .route("/profile", patch(routers::writer::update_writer::handler))
         .layer(cors)
         .with_state(state);

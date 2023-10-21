@@ -76,3 +76,33 @@ pub mod remove_auth_cookie {
         (jar, StatusCode::OK)
     }
 }
+
+pub mod get_writer_id_from_auth_cookie {
+
+    use axum::{extract::Json, http::StatusCode, response::IntoResponse};
+    use axum_extra::extract::SignedCookieJar;
+    use cookie::Cookie;
+
+    #[derive(serde::Deserialize)]
+    pub struct AuthBody {
+        email: String,
+    }
+
+    struct WriterRow {
+        id: i64,
+    }
+
+    pub const ACCESS_TOKEN_COOKIE_NAME: &str = "access_token";
+
+    pub async fn handler(jar: SignedCookieJar) -> Result<impl IntoResponse, StatusCode> {
+        let access_token_cookie = jar.get(ACCESS_TOKEN_COOKIE_NAME);
+
+        if access_token_cookie.is_none() {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
+
+        let writer_id = access_token_cookie.unwrap().value().to_owned();
+
+        Ok(writer_id)
+    }
+}
