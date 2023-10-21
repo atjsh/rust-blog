@@ -5,11 +5,18 @@ mod routers;
 
 use axum::{
     extract::FromRef,
-    http::{HeaderValue, Method},
-    routing::{get, patch, post, put},
+    http::HeaderValue,
+    routing::{delete, get, patch, post, put},
     Router,
 };
 use axum_extra::extract::cookie::Key;
+use http::{
+    header::{
+        ACCESS_CONTROL_ALLOW_CREDENTIALS, ACCESS_CONTROL_ALLOW_HEADERS,
+        ACCESS_CONTROL_REQUEST_HEADERS, ACCESS_CONTROL_REQUEST_METHOD, CONTENT_TYPE,
+    },
+    Method,
+};
 use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 use tower_http::cors::CorsLayer;
@@ -22,7 +29,7 @@ pub struct AppState {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), lambda_http::Error> {
+async fn main() {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -47,7 +54,21 @@ async fn main() -> Result<(), lambda_http::Error> {
     };
 
     let cors = CorsLayer::new()
-        .allow_methods([Method::GET, Method::POST])
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PUT,
+            Method::PATCH,
+            Method::OPTIONS,
+            Method::DELETE,
+        ])
+        .allow_headers([
+            ACCESS_CONTROL_ALLOW_CREDENTIALS,
+            ACCESS_CONTROL_ALLOW_HEADERS,
+            ACCESS_CONTROL_REQUEST_HEADERS,
+            ACCESS_CONTROL_REQUEST_METHOD,
+            CONTENT_TYPE,
+        ])
         .allow_origin(
             std::env::var(env_values::WEB_CLIENT_URL)
                 .unwrap()
@@ -73,6 +94,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .route("/post", post(routers::post::create_post::handler))
         .route("/auth", put(routers::auth::get_auth_cookie::handler))
+        .route("/auth", delete(routers::auth::remove_auth_cookie::handler))
         .route(
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
@@ -85,5 +107,12 @@ async fn main() -> Result<(), lambda_http::Error> {
         .layer(cors)
         .with_state(state);
 
-    lambda_http::run(app).await
+    // run as lambda
+    // lambda_http::run(app).await
+
+    // run as axum
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }

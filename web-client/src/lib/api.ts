@@ -77,17 +77,35 @@ export type GetWriterResponseData = {
 	description: string;
 };
 
-export async function getAuthed(): Promise<boolean> {
+export type GetAuthedPayload = {
+	email: string;
+};
+
+export async function getAuthed(payload: GetAuthedPayload): Promise<boolean> {
 	try {
-		await serverFetch(`/auth`, {
-			method: 'PUT'
+		const response = await serverFetch(`/auth`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
 		});
+
+		if (response.status !== 200) {
+			return false;
+		}
 
 		return true;
 	} catch (error) {
 		console.error(error);
 		return false;
 	}
+}
+
+export async function logout() {
+	await serverFetch(`/auth`, {
+		method: 'DELETE'
+	});
 }
 
 export async function getCategories(): Promise<GetCategoryResponseData[]> {
