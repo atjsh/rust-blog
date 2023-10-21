@@ -1,15 +1,15 @@
-use axum::{
-    async_trait,
-    extract::{FromRef, FromRequestParts},
-    http::{request::Parts, StatusCode},
-};
-use axum_extra::extract::SignedCookieJar;
-use cookie::{Cookie, Key};
-use sqlx::PgPool;
-
-use crate::routers::auth::get_auth_cookie::ACCESS_TOKEN_COOKIE_NAME;
+use crate::env_values;
 
 use super::DatabaseConnection;
+use axum::{
+    async_trait,
+    extract::{FromRef, FromRequestParts, TypedHeader},
+    headers::{authorization::Bearer, Authorization},
+    http::{request::Parts, StatusCode},
+};
+use jsonwebtoken::{decode, DecodingKey, Validation};
+use serde::{Deserialize, Serialize};
+use sqlx::PgPool;
 
 pub struct AuthedWriter {
     pub id: i32,
@@ -17,40 +17,55 @@ pub struct AuthedWriter {
     pub description: String,
 }
 
-type CookieAssigningResponse = (StatusCode, SignedCookieJar, String);
+type CookieAssigningResponse = (StatusCode, String);
 
-fn unauthorized(jar: SignedCookieJar) -> CookieAssigningResponse {
-    (StatusCode::UNAUTHORIZED, jar, "".to_string())
+fn unauthorized() -> CookieAssigningResponse {
+    (StatusCode::UNAUTHORIZED, "".to_string())
 }
 
-fn service_unavailable(jar: SignedCookieJar) -> CookieAssigningResponse {
-    (StatusCode::SERVICE_UNAVAILABLE, jar, "".to_string())
+fn service_unavailable() -> CookieAssigningResponse {
+    (StatusCode::SERVICE_UNAVAILABLE, "".to_string())
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Claims {
+    sub: String,
+    exp: u64,
 }
 
 #[async_trait]
 impl<S> FromRequestParts<S> for AuthedWriter
 where
     S: Send + Sync,
-    Key: FromRef<S> + Into<Key>,
     PgPool: FromRef<S>,
 {
     type Rejection = CookieAssigningResponse;
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        let jar: SignedCookieJar = SignedCookieJar::<Key>::from_request_parts(parts, state)
-            .await
-            .unwrap();
+        let TypedHeader(Authorization(token)) =
+            TypedHeader::<Authorization<Bearer>>::from_request_parts(parts, state)
+                .await
+                .map_err(|_| unauthorized())?;
 
-        let writer_id: i32 = jar
-            .get(ACCESS_TOKEN_COOKIE_NAME)
-            .and_then(|cookie| cookie.value().parse().ok())
-            .ok_or_else(|| {
-                unauthorized(jar.clone().remove(Cookie::named(ACCESS_TOKEN_COOKIE_NAME)))
-            })?;
+        println!("token: {}", token.token());
+
+        let writer_id: i32 = match decode::<Claims>(
+            token.token(),
+            &DecodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),
+            &Validation::new(jsonwebtoken::Algorithm::HS256),
+        ) {
+            Ok(token_data) => token_data
+                .claims
+                .sub
+                .parse()
+                .ok()
+                .ok_or_else(unauthorized)?,
+            Err(_) => return Err(unauthorized()),
+        };
 
         let mut database_connection = DatabaseConnection::from_request_parts(parts, state)
             .await
-            .map_err(|_| service_unavailable(jar.clone()))?
+            .map_err(|_| service_unavailable())?
             .0;
 
         sqlx::query_as!(
@@ -60,6 +75,6 @@ where
         )
         .fetch_one(&mut *database_connection)
         .await
-        .map_err(|_| unauthorized(jar.remove(Cookie::named(ACCESS_TOKEN_COOKIE_NAME))))
+        .map_err(|_| unauthorized())
     }
 }

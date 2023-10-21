@@ -93,8 +93,6 @@ async fn main() {
             get(routers::post::get_post_by_post_id::handler),
         )
         .route("/post", post(routers::post::create_post::handler))
-        .route("/auth", put(routers::auth::get_auth_cookie::handler))
-        .route("/auth", delete(routers::auth::remove_auth_cookie::handler))
         .route(
             "/auth/access-token",
             get(routers::auth::get_access_token::handler),
