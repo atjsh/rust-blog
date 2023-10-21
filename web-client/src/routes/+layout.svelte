@@ -8,8 +8,8 @@
 	<header>
 		<a href="/">This is rust-blog</a><br />
 		{#if data.authed}
-			<a href="/logout" data-sveltekit-preload-data="tap">Logout</a> /
-			<a href="/profile">Profile</a>
+			<a href="/profile">Profile</a> /
+			<a href="/logout" data-sveltekit-preload-data="tap">Logout</a>
 		{:else}
 			<a href="/login">Login</a>
 		{/if}

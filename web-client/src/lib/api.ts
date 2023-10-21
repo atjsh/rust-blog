@@ -1,5 +1,6 @@
 import returnFetch from 'return-fetch';
 import { PUBLIC_SERVER_URL } from '$env/static/public';
+import { goto } from '$app/navigation';
 
 const serverFetch = returnFetch({
 	baseUrl: PUBLIC_SERVER_URL,
@@ -99,6 +100,22 @@ export async function getAuthed(payload: GetAuthedPayload): Promise<boolean> {
 	} catch (error) {
 		console.error(error);
 		return false;
+	}
+}
+
+export async function getCurrentAuthedWriterId(): Promise<number> {
+	try {
+		return Number(
+			(
+				await serverFetch(`/auth`, {
+					method: 'GET'
+				})
+			).body
+		);
+	} catch (error) {
+		goto('/login');
+
+		return undefined as never;
 	}
 }
 
