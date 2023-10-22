@@ -29,7 +29,7 @@ pub struct AppState {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), lambda_http::Error> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -119,11 +119,11 @@ async fn main() {
         .with_state(state);
 
     // run as lambda
-    // lambda_http::run(app).await
+    lambda_http::run(app).await
 
     // run as axum
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    // axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    //     .serve(app.into_make_service())
+    //     .await
+    //     .unwrap();
 }
