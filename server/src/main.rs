@@ -44,8 +44,6 @@ async fn main() -> Result<(), lambda_http::Error> {
         .await
         .expect("can't connect to database");
 
-    let cookit_secret_key_string = std::env::var(env_values::JWT_SECRET).unwrap();
-
     let state = AppState { pg_pool };
 
     let cors = CorsLayer::new()
