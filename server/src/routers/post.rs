@@ -321,3 +321,29 @@ pub mod update_post {
         Ok(axum::Json(post.into_nested_post_info()))
     }
 }
+
+pub mod delete_post {
+    use super::*;
+
+    pub async fn handler(
+        authed_writer: AuthedWriter,
+        DatabaseConnection(mut conn): DatabaseConnection,
+        Path(post_id): Path<i32>,
+    ) -> Result<impl IntoResponse, StatusCode> {
+        let writer_id = authed_writer.id;
+
+        sqlx::query!(
+            r#"
+            delete from post
+            where id = $1 and written_by_id = $2
+            "#,
+            post_id,
+            writer_id
+        )
+        .execute(&mut *conn)
+        .await
+        .unwrap();
+
+        Ok(StatusCode::NO_CONTENT)
+    }
+}

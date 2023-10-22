@@ -21,7 +21,9 @@
 		</li>
 		{#if data.isWriter}
 			<li>
-				<b>You</b> wrote this article. You can: <a href="/post/{data.post.id}/edit">edit</a>
+				<b>You</b> wrote this article. You can:
+				<a href="/post/{data.post.id}/edit">edit</a>
+				<a href="/post/{data.post.id}/delete">delete</a>
 			</li>
 		{/if}
 	</ul>

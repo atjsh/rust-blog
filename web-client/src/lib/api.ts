@@ -190,9 +190,16 @@ export async function updatePost(
 		}
 	});
 
-	console.log(response);
-
 	return (await response.json()) as GetPostResponseData;
+}
+
+export async function deletePost(postId: number, accessToken: string) {
+	await serverFetch(`/post/${postId}`, {
+		method: 'DELETE',
+		headers: {
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
 }
 
 export async function getWriter(writerId: number): Promise<GetWriterResponseData> {

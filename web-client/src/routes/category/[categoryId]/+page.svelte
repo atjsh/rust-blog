@@ -5,7 +5,7 @@
 </script>
 
 <h1>Category: {data.category.name}</h1>
-<ol>
+<ul>
 	{#each data.posts as post}
 		<li>
 			<a href={`/post/${post.id}`}>{post.title}</a>
@@ -13,4 +13,4 @@
 	{:else}
 		<li>No posts</li>
 	{/each}
-</ol>
+</ul>
