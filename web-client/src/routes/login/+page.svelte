@@ -2,14 +2,14 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { PUBLIC_WEB_CLIENT_URL } from '$env/static/public';
 	import JsCookie from 'js-cookie';
-	import { getAuthed } from '$lib/api';
+	import { getAccessToken } from '$lib/api';
 
 	let loginAttemptResult = '';
 
 	async function sendAuth(event: { currentTarget: EventTarget & HTMLFormElement }) {
 		const data = new FormData(event.currentTarget);
 
-		const authResult = await getAuthed({
+		const authResult = await getAccessToken({
 			email: String(data.get('email'))
 		});
 

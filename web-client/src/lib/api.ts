@@ -82,25 +82,20 @@ export type GetAuthedPayload = {
 	email: string;
 };
 
-export async function getAuthed(payload: GetAuthedPayload): Promise<boolean> {
-	try {
-		const response = await serverFetch(`/auth`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(payload)
-		});
+export async function getAccessToken(payload: GetAuthedPayload): Promise<string> {
+	const response = await serverFetch(`/auth/access-token`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(payload)
+	});
 
-		if (response.status !== 200) {
-			return false;
-		}
-
-		return true;
-	} catch (error) {
-		console.error(error);
-		return false;
+	if (response.status !== 200) {
+		throw Error('Failed to get access token');
 	}
+
+	return response.text();
 }
 
 export async function getCurrentAuthedWriterId(): Promise<number> {
