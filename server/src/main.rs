@@ -6,7 +6,7 @@ mod routers;
 use axum::{
     extract::FromRef,
     http::HeaderValue,
-    routing::{delete, get, patch, post, put},
+    routing::{get, patch, post},
     Router,
 };
 use axum_extra::extract::cookie::Key;
