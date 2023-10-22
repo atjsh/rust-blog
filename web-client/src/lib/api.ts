@@ -152,22 +152,20 @@ export async function createPost(
 	content: string,
 	accessToken: string
 ): Promise<GetPostResponseData> {
-	const response = await serverFetch(`/post`, {
-		method: 'POST',
-		body: JSON.stringify({
-			title,
-			content,
-			category_id: categoryId
-		}),
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			'Content-Type': 'application/json'
-		}
-	});
-
-	console.log(response);
-
-	return (await response.json()) as GetPostResponseData;
+	return (await (
+		await serverFetch(`/post`, {
+			method: 'POST',
+			body: JSON.stringify({
+				title,
+				content,
+				category_id: categoryId
+			}),
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'Content-Type': 'application/json'
+			}
+		})
+	).json()) as GetPostResponseData;
 }
 
 export async function updatePost(
