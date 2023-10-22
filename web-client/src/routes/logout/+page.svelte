@@ -1,12 +1,5 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 
-	async function afterLogout() {
-		await invalidateAll();
-		goto('/');
-	}
+	invalidateAll().then(() => goto('/'));
 </script>
-
-<main>
-	{#await afterLogout()}{/await}
-</main>
