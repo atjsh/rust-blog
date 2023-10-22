@@ -17,13 +17,13 @@ pub struct AuthedWriter {
     pub description: String,
 }
 
-type CookieAssigningResponse = (StatusCode, String);
+type ErrorResponse = (StatusCode, String);
 
-fn unauthorized() -> CookieAssigningResponse {
+fn unauthorized() -> ErrorResponse {
     (StatusCode::UNAUTHORIZED, "".to_string())
 }
 
-fn service_unavailable() -> CookieAssigningResponse {
+fn service_unavailable() -> ErrorResponse {
     (StatusCode::SERVICE_UNAVAILABLE, "".to_string())
 }
 
@@ -39,7 +39,7 @@ where
     S: Send + Sync,
     PgPool: FromRef<S>,
 {
-    type Rejection = CookieAssigningResponse;
+    type Rejection = ErrorResponse;
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let TypedHeader(Authorization(token)) =
@@ -49,7 +49,7 @@ where
 
         let writer_id: i32 = match decode::<Claims>(
             token.token(),
-            &DecodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),
+            &DecodingKey::from_secret(std::env::var(env_values::JWT_SECRET).unwrap().as_bytes()),
             &Validation::new(jsonwebtoken::Algorithm::HS256),
         ) {
             Ok(token_data) => token_data

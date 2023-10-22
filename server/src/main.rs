@@ -9,7 +9,6 @@ use axum::{
     routing::{delete, get, patch, post},
     Router,
 };
-use axum_extra::extract::cookie::Key;
 use http::{
     header::{
         ACCESS_CONTROL_ALLOW_CREDENTIALS, ACCESS_CONTROL_ALLOW_HEADERS,
@@ -24,7 +23,6 @@ use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, FromRef)]
 pub struct AppState {
-    cookie_secret_key: Key,
     pg_pool: sqlx::PgPool,
 }
 
@@ -46,12 +44,9 @@ async fn main() -> Result<(), lambda_http::Error> {
         .await
         .expect("can't connect to database");
 
-    let cookit_secret_key_string = std::env::var(env_values::COOKIE_SECRET).unwrap();
+    let cookit_secret_key_string = std::env::var(env_values::JWT_SECRET).unwrap();
 
-    let state = AppState {
-        cookie_secret_key: Key::from(cookit_secret_key_string.as_bytes()),
-        pg_pool,
-    };
+    let state = AppState { pg_pool };
 
     let cors = CorsLayer::new()
         .allow_methods([
@@ -112,7 +107,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .route(
             "/profile",
-            get(routers::auth::get_writer_id_from_auth_cookie::handler),
+            get(routers::auth::get_writer_id_from_auth_header::handler),
         )
         .route("/profile", patch(routers::writer::update_writer::handler))
         .layer(cors)

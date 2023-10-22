@@ -1,4 +1,4 @@
-pub mod get_writer_id_from_auth_cookie {
+pub mod get_writer_id_from_auth_header {
     use axum::{
         headers::{authorization::Bearer, Authorization},
         http::StatusCode,
@@ -25,7 +25,7 @@ pub mod get_writer_id_from_auth_cookie {
     ) -> Result<impl IntoResponse, StatusCode> {
         let writer_id: i32 = match decode::<Claims>(
             token.token(),
-            &DecodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),
+            &DecodingKey::from_secret(std::env::var(env_values::JWT_SECRET).unwrap().as_bytes()),
             &Validation::new(jsonwebtoken::Algorithm::HS256),
         ) {
             Ok(token_data) => token_data
@@ -93,7 +93,7 @@ pub mod get_access_token {
         let token = encode(
             &jsonwebtoken::Header::new(jsonwebtoken::Algorithm::HS256),
             &claims,
-            &EncodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),
+            &EncodingKey::from_secret(std::env::var(env_values::JWT_SECRET).unwrap().as_bytes()),
         );
 
         Ok(token.unwrap())
