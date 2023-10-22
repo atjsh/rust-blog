@@ -31,6 +31,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4",
     "crypto-js": "^4.1.1",
     "js-cookie": "^3.0.5",
     "return-fetch": "^0.4.5",

@@ -1,6 +1,5 @@
-import returnFetch from 'return-fetch';
 import { PUBLIC_SERVER_URL } from '$env/static/public';
-import { goto } from '$app/navigation';
+import returnFetch from 'return-fetch';
 
 const serverFetch = returnFetch({
 	baseUrl: PUBLIC_SERVER_URL,
@@ -84,7 +83,7 @@ export type GetAuthedPayload = {
 
 export async function getAccessToken(payload: GetAuthedPayload): Promise<string> {
 	const response = await serverFetch(`/auth/access-token`, {
-		method: 'PUT',
+		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
@@ -98,20 +97,15 @@ export async function getAccessToken(payload: GetAuthedPayload): Promise<string>
 	return response.text();
 }
 
-export async function getCurrentAuthedWriterId(): Promise<number> {
-	try {
-		return Number(
-			(
-				await serverFetch(`/auth`, {
-					method: 'GET'
-				})
-			).body
-		);
-	} catch (error) {
-		goto('/login');
+export async function getCurrentAuthedWriterId(accessToken: string): Promise<number> {
+	const response = await serverFetch('/profile', {
+		method: 'GET',
+		headers: {
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
 
-		return undefined as never;
-	}
+	return Number(await response.text());
 }
 
 export async function logout() {

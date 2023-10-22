@@ -47,8 +47,6 @@ where
                 .await
                 .map_err(|_| unauthorized())?;
 
-        println!("token: {}", token.token());
-
         let writer_id: i32 = match decode::<Claims>(
             token.token(),
             &DecodingKey::from_secret(std::env::var(env_values::COOKIE_SECRET).unwrap().as_bytes()),

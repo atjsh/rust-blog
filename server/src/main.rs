@@ -95,7 +95,7 @@ async fn main() {
         .route("/post", post(routers::post::create_post::handler))
         .route(
             "/auth/access-token",
-            get(routers::auth::get_access_token::handler),
+            post(routers::auth::get_access_token::handler),
         )
         .route(
             "/writer/:writer_id",

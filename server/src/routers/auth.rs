@@ -83,8 +83,6 @@ pub mod get_access_token {
 
         let writer = result.unwrap();
 
-        println!("writer: {:?}", writer.id);
-
         let mut expire_date = Utc::now();
         expire_date += chrono::Duration::days(365);
 

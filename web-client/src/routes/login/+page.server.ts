@@ -1,6 +1,8 @@
 import { COOKIE_SECRET } from '$env/static/private';
+import { getAccessToken } from '$lib';
+import { Temporal } from '@js-temporal/polyfill';
+import { fail, redirect } from '@sveltejs/kit';
 import CryptoJS from 'crypto-js';
-import { getAccessToken } from '../../lib';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -15,20 +17,17 @@ export const actions: Actions = {
 		} catch (error) {
 			console.error(error);
 
-			return {
-				success: false
-			};
+			return fail(403, { email, incorrect: true });
 		}
 
 		cookies.set('accessToken', accessToken, {
 			encode: (value) => CryptoJS.AES.encrypt(value, COOKIE_SECRET).toString(),
 			httpOnly: true,
 			secure: true,
-			path: '/'
+			path: '/',
+			expires: new Date(Temporal.Now.instant().add({ hours: 24 * 365 }).epochMilliseconds)
 		});
 
-		return {
-			success: true
-		};
+		throw redirect(301, '/');
 	}
 } satisfies Actions;
