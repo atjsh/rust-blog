@@ -92,6 +92,7 @@ async fn main() {
             "/post/:post_id",
             get(routers::post::get_post_by_post_id::handler),
         )
+        .route("/post/:post_id", patch(routers::post::update_post::handler))
         .route("/post", post(routers::post::create_post::handler))
         .route(
             "/auth/access-token",

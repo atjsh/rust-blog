@@ -170,6 +170,31 @@ export async function createPost(
 	return (await response.json()) as GetPostResponseData;
 }
 
+export async function updatePost(
+	postId: number,
+	categoryId: number,
+	title: string,
+	content: string,
+	accessToken: string
+): Promise<GetPostResponseData> {
+	const response = await serverFetch(`/post/${postId}`, {
+		method: 'PATCH',
+		body: JSON.stringify({
+			title,
+			content,
+			category_id: categoryId
+		}),
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+			'Content-Type': 'application/json'
+		}
+	});
+
+	console.log(response);
+
+	return (await response.json()) as GetPostResponseData;
+}
+
 export async function getWriter(writerId: number): Promise<GetWriterResponseData> {
 	return (await (
 		await serverFetch(`/writer/${writerId}`, {

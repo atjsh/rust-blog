@@ -207,3 +207,117 @@ pub mod create_post {
         Ok(axum::Json(post.into_nested_post_info()))
     }
 }
+
+pub mod update_post {
+    use axum::Json;
+
+    use super::*;
+
+    struct GetPostByPostIdRow {
+        id: i64,
+
+        title: String,
+        content: String,
+        created_at: NaiveDateTime,
+
+        written_by_id: i64,
+        written_by_email: String,
+
+        category_id: i64,
+        category_name: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponse {
+        id: i64,
+
+        title: String,
+        content: String,
+        created_at: NaiveDateTime,
+
+        written_by: GetPostByPostIdResponseWrittenBy,
+
+        category: GetPostByPostIdResponseCategory,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseWrittenBy {
+        id: i64,
+        email: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseCategory {
+        id: i64,
+        name: String,
+    }
+
+    impl GetPostByPostIdRow {
+        fn into_nested_post_info(self) -> GetPostByPostIdResponse {
+            GetPostByPostIdResponse {
+                id: self.id,
+                title: self.title,
+                content: self.content,
+                created_at: self.created_at,
+                written_by: GetPostByPostIdResponseWrittenBy {
+                    id: self.written_by_id,
+                    email: self.written_by_email,
+                },
+                category: GetPostByPostIdResponseCategory {
+                    id: self.category_id,
+                    name: self.category_name,
+                },
+            }
+        }
+    }
+
+    #[derive(Deserialize)]
+    pub struct UpdatePostBody {
+        title: String,
+        content: String,
+        category_id: i32,
+    }
+
+    pub async fn handler(
+        authed_writer: AuthedWriter,
+        DatabaseConnection(mut conn): DatabaseConnection,
+        Path(post_id): Path<i32>,
+        Json(payload): Json<UpdatePostBody>,
+    ) -> Result<impl IntoResponse, StatusCode> {
+        let writer_id = authed_writer.id;
+
+        let post = sqlx::query_as!(
+            GetPostByPostIdRow,
+            r#"
+            with updated as (
+                update post
+                set title = $1, content = $2, category_id = $3
+                where id = $4 and written_by_id = $5
+                returning *
+            )
+            select
+                p.id,
+                p.title,
+                p.content,
+                p.created_at,
+                u.id as "written_by_id",
+                u.email as "written_by_email",
+                c.id as "category_id",
+                c.name as "category_name"
+            from updated p
+            inner join writer u on u.id = p.written_by_id
+            inner join category c on c.id = p.category_id
+            "#,
+            payload.title,
+            payload.content,
+            payload.category_id,
+            post_id,
+            writer_id
+        )
+        .fetch_one(&mut *conn)
+        .await
+        .unwrap();
+
+        Ok(axum::Json(post.into_nested_post_info()))
+    }
+}

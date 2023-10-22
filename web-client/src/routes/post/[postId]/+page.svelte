@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageServerData } from './$types';
 
-	export let data: PageData;
+	export let data: PageServerData;
 </script>
 
 <hr />
@@ -19,6 +19,11 @@
 		<li>
 			published at: {new Date(data.post.created_at).toLocaleString('ko-KR')}
 		</li>
+		{#if data.isWriter}
+			<li>
+				<b>You</b> wrote this article. You can: <a href="/post/{data.post.id}/edit">edit</a>
+			</li>
+		{/if}
 	</ul>
 </div>
 
