@@ -70,8 +70,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .allow_credentials(true);
 
-    let app = Router::new()
-        .route("/", get(routers::root::get_hello_world::handler))
+    let category_router = Router::new()
         .route("/category", get(routers::category::get_categories::handler))
         .route(
             "/category/:category_id",
@@ -80,7 +79,9 @@ async fn main() -> Result<(), lambda_http::Error> {
         .route(
             "/category/:category_id/posts",
             get(routers::category::get_category_posts::handler),
-        )
+        );
+
+    let post_router: Router<_, _> = Router::new()
         .route(
             "/post/:post_id",
             get(routers::post::get_post_by_post_id::handler),
@@ -90,11 +91,9 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/post/:post_id",
             delete(routers::post::delete_post::handler),
         )
-        .route("/post", post(routers::post::create_post::handler))
-        .route(
-            "/auth/access-token",
-            post(routers::auth::get_access_token::handler),
-        )
+        .route("/post", post(routers::post::create_post::handler));
+
+    let writer_router = Router::new()
         .route(
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
@@ -102,12 +101,27 @@ async fn main() -> Result<(), lambda_http::Error> {
         .route(
             "/writer/:writer_id/posts",
             get(routers::writer::get_posts_by_writer_id::handler),
-        )
+        );
+
+    let profile_router = Router::new()
         .route(
             "/profile",
             get(routers::auth::get_writer_id_from_auth_header::handler),
         )
-        .route("/profile", patch(routers::writer::update_writer::handler))
+        .route("/profile", patch(routers::writer::update_writer::handler));
+
+    let auth_router = Router::new().route(
+        "/auth/access-token",
+        post(routers::auth::get_access_token::handler),
+    );
+
+    let app = Router::new()
+        .route("/", get(routers::root::get_hello_world::handler))
+        .merge(category_router)
+        .merge(post_router)
+        .merge(writer_router)
+        .merge(profile_router)
+        .merge(auth_router)
         .layer(cors)
         .with_state(state);
 
