@@ -1,5 +1,9 @@
 <script lang="ts">
 	import type { LayoutServerData } from './$types';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+
+	inject({ mode: dev ? 'development' : 'production' });
 
 	export let data: LayoutServerData;
 </script>
