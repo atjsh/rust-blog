@@ -35,4 +35,4 @@ yarn
 yarn dev
 ```
 
-and local vite server will be running
+and local vite server will be running.
