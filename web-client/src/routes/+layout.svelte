@@ -7,12 +7,6 @@
 
 <main>
 	<header>
-		{#if $navigating}
-			<div class="loading">
-				<div class="spin">⏳</div>
-				<div>loading...</div>
-			</div>
-		{/if}
 		<a href="/">This is rust-blog</a><br />
 		{#if data.authed}
 			<a href="/profile">Profile</a> /
