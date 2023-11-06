@@ -16,7 +16,7 @@ I chose to use [axum](https://github.com/tokio-rs/axum) as a web framework, and 
 
 ## web-client
 
-I chose to use [bun](https://github.com/oven-sh/bun) as a typescript runtime.
+I Chose to use [SvelteKit](https://kit.svelte.dev/) as a web framework, and [typescript](https://www.typescriptlang.org/) as a language. The app will be deployed to [Cloudflare Pages](https://pages.cloudflare.com/) and locally tested with [vite](https://vitejs.dev/).
 
 ## Develop locally
 
@@ -31,8 +31,8 @@ and local [cargo-lambda](https://github.com/cargo-lambda/cargo-lambda) server wi
 ### web-client
 
 ```bash
-yarn
-yarn dev
+npm i
+npm run dev
 ```
 
 and local vite server will be running.
