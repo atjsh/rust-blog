@@ -5,33 +5,35 @@
 </script>
 
 <h1>{data.post.title}</h1>
-<div>
-	<ul>
-		<li>
-			<a href="/writer/{data.post.written_by.id}"> writer: {data.post.written_by.email}</a>
-		</li>
-		<li>
-			published at: {new Date(data.post.created_at).toLocaleString('ko-KR')}
-		</li>
-		{#if data.isWriter}
+<article>
+	<div>
+		<ul>
 			<li>
-				<b>You</b> wrote this article. You can:
-				<a href="/post/{data.post.id}/edit">edit</a>
-				<a href="/post/{data.post.id}/delete">delete</a>
+				<a href="/writer/{data.post.written_by.id}"> writer: {data.post.written_by.email}</a>
 			</li>
-		{/if}
-	</ul>
-</div>
+			<li>
+				published at: {new Date(data.post.created_at).toLocaleString('ko-KR')}
+			</li>
+			{#if data.isWriter}
+				<li>
+					<b>You</b> wrote this article. You can:
+					<a href="/post/{data.post.id}/edit">edit</a>
+					<a href="/post/{data.post.id}/delete">delete</a>
+				</li>
+			{/if}
+		</ul>
+	</div>
 
-<div style="border: 1px solid gray; padding: 2em">
-	{@html data.post.content}
-</div>
+	<div class="post-content">
+		{@html data.post.content}
+	</div>
 
-<br />
+	<br />
 
-<a href="/category/{data.post.category.id}">
-	See other posts from {data.post.category.name} category
-</a>
+	<a href="/category/{data.post.category.id}">
+		See other posts from {data.post.category.name} category
+	</a>
+</article>
 
 <svelte:head>
 	<title>{data.post.title} | blog.atj.sh</title>
@@ -40,5 +42,12 @@
 <style>
 	h1 {
 		word-break: keep-all;
+	}
+
+	.post-content {
+		border: 1px solid gray;
+		padding: 2em;
+		word-break: keep-all;
+		word-wrap: break-word;
 	}
 </style>

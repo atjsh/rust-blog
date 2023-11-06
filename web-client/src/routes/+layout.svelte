@@ -28,7 +28,7 @@
 	.icon {
 		font-size: 3em;
 		margin-top: 0.5em;
-		margin-bottom: 0.5em;
+		margin-bottom: 0.1em;
 	}
 
 	.title-a {
