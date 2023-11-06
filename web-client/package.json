@@ -33,9 +33,9 @@
 	"type": "module",
 	"dependencies": {
 		"@js-temporal/polyfill": "^0.4.4",
+		"axios": "^1.6.0",
 		"crypto-js": "^4.1.1",
 		"js-cookie": "^3.0.5",
-		"return-fetch": "^0.4.5",
 		"svelte-persisted-store": "^0.7.0"
 	}
 }
