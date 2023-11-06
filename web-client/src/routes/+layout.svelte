@@ -1,49 +1,41 @@
 <script lang="ts">
 	import type { LayoutServerData } from './$types';
-	import { navigating } from '$app/stores';
 
 	export let data: LayoutServerData;
 </script>
 
 <main>
 	<header>
-		<a href="/">This is rust-blog</a><br />
+		<a href="/" class="title-a">
+			<div>
+				<div class="icon">🫠</div>
+				<code>blog.atj.sh</code>
+			</div>
+		</a>
+	</header>
+	<slot />
+	<footer>
+		<p>2023 atjsh. All rights reserved</p>
 		{#if data.authed}
 			<a href="/profile">Profile</a> /
 			<a href="/logout" data-sveltekit-preload-data="tap">Logout</a> /
 			<a href="/post/new">New Post</a>
-		{:else}
-			<a href="/login">Login</a>
 		{/if}
-	</header>
-	<slot />
-	<footer>2023 ATJSH. All rights reserved</footer>
+	</footer>
 </main>
 
 <style>
-	.loading {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		background: rgba(0, 0, 0, 0.8);
-		color: white;
-		padding: 1em;
-		display: flex;
-		gap: 0.5em;
+	.icon {
+		font-size: 3em;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
 	}
 
-	.spin {
-		animation: spin 1s linear infinite;
-	}
+	.title-a {
+		text-decoration: none;
 
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-
-		100% {
-			transform: rotate(360deg);
+		&:hover {
+			text-decoration: underline;
 		}
 	}
 </style>

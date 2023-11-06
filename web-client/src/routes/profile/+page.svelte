@@ -18,3 +18,7 @@
 		</li>
 	{/each}
 </ul>
+
+<svelte:head>
+	<title>Writer {data.writer.email} | blog.atj.sh</title>
+</svelte:head>

@@ -10,3 +10,7 @@
 <form method="post">
 	<button type="submit">Delete</button>
 </form>
+
+<svelte:head>
+	<title>delete {data.post.title} | blog.atj.sh</title>
+</svelte:head>

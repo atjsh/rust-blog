@@ -4,13 +4,7 @@
 	export let data: PageServerData;
 </script>
 
-<hr />
-
-<a href="/category/{data.post.category.id}">
-	back to category: {data.post.category.name}
-</a>
-
-<h1>Title: {data.post.title}</h1>
+<h1>{data.post.title}</h1>
 <div>
 	<ul>
 		<li>
@@ -32,3 +26,19 @@
 <div style="border: 1px solid gray; padding: 2em">
 	{@html data.post.content}
 </div>
+
+<br />
+
+<a href="/category/{data.post.category.id}">
+	See other posts from {data.post.category.name} category
+</a>
+
+<svelte:head>
+	<title>{data.post.title} | blog.atj.sh</title>
+</svelte:head>
+
+<style>
+	h1 {
+		word-break: keep-all;
+	}
+</style>

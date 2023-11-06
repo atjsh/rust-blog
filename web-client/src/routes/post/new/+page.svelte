@@ -39,3 +39,7 @@
 		<p style="color: red">{form.error}</p>
 	{/if}
 </form>
+
+<svelte:head>
+	<title>New Post | blog.atj.sh</title>
+</svelte:head>

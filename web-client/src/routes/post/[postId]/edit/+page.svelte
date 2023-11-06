@@ -47,3 +47,7 @@
 		<p style="color: red">{form.error}</p>
 	{/if}
 </form>
+
+<svelte:head>
+	<title>edit {data.post.title} | blog.atj.sh</title>
+</svelte:head>

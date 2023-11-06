@@ -14,3 +14,7 @@
 		<li>No posts</li>
 	{/each}
 </ul>
+
+<svelte:head>
+	<title>Category {data.category.name} | blog.atj.sh</title>
+</svelte:head>
