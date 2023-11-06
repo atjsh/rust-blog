@@ -15,7 +15,9 @@
 	</header>
 	<slot />
 	<footer>
-		<p>2023 atjsh. All rights reserved</p>
+		<p>
+			2023 <a href="https://atj.sh/">atjsh</a>. All rights reserved
+		</p>
 		{#if data.authed}
 			<a href="/profile">Profile</a> /
 			<a href="/logout" data-sveltekit-preload-data="tap">Logout</a> /
