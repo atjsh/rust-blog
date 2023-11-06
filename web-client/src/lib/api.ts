@@ -2,18 +2,7 @@ import { PUBLIC_SERVER_URL } from '$env/static/public';
 import returnFetch from 'return-fetch';
 
 const serverFetch = returnFetch({
-	baseUrl: PUBLIC_SERVER_URL,
-	interceptors: {
-		request: async (requestArgs) => {
-			return [
-				requestArgs[0],
-				{
-					...requestArgs[1],
-					credentials: 'include'
-				}
-			];
-		}
-	}
+	baseUrl: PUBLIC_SERVER_URL
 });
 
 export type GetCategoryResponseData = {
