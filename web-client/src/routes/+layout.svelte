@@ -7,7 +7,7 @@
 <main>
 	<header>
 		<a href="/" class="title-a">
-			<div>
+			<div class="title-content">
 				<div class="icon">🫠</div>
 				<code>blog.atj.sh</code>
 			</div>
@@ -26,7 +26,7 @@
 	</footer>
 </main>
 
-<style>
+<style lang="scss">
 	.icon {
 		font-size: 3em;
 		margin-top: 0.5em;
@@ -35,9 +35,15 @@
 
 	.title-a {
 		text-decoration: none;
+		color: rgb(1, 149, 50);
+		font-weight: bold;
 
-		&:hover {
-			text-decoration: underline;
+		.title-content {
+			display: inline-block;
+
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 </style>
