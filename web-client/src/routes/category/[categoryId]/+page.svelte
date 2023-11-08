@@ -1,19 +1,21 @@
 <script lang="ts">
+	import PostList from '../../../lib/post/post-list.svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
 </script>
 
 <h1>Category: {data.category.name}</h1>
-<ul>
-	{#each data.posts as post}
-		<li>
-			<a href={`/post/${post.id}`}>{post.title}</a>
-		</li>
-	{:else}
-		<li>No posts</li>
-	{/each}
-</ul>
+<p>
+	Posts from {data.category.name} category
+</p>
+
+<PostList
+	categoryWithPosts={{
+		...data.category,
+		posts: data.posts
+	}}
+/>
 
 <svelte:head>
 	<title>Category {data.category.name} | blog.atj.sh</title>

@@ -48,6 +48,7 @@
 <style lang="scss">
 	h1 {
 		word-break: keep-all;
+		word-wrap: break-word;
 	}
 
 	.post-container {
