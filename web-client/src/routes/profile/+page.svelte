@@ -1,4 +1,6 @@
 <script lang="ts">
+	import WriterPosts from '$lib/writer/writer-posts.svelte';
+	import WriterProfile from '$lib/writer/writer-profile.svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -6,18 +8,11 @@
 
 <h1>Profile</h1>
 
-<p>email: {data.writer.email}</p>
-<p>self introduce: {data.writer.description}</p>
+<WriterProfile writer={data.writer} />
 
 <h2>Posts</h2>
 
-<ul>
-	{#each data.posts as post}
-		<li>
-			<a href={`/post/${post.id}`}>{post.title}</a>
-		</li>
-	{/each}
-</ul>
+<WriterPosts posts={data.posts} />
 
 <svelte:head>
 	<title>Writer {data.writer.email} | blog.atj.sh</title>

@@ -39,7 +39,7 @@ export type GetPostResponseData = {
 		email: string;
 	};
 	category: {
-		id: string;
+		id: number;
 		name: string;
 	};
 };
@@ -55,7 +55,7 @@ export type GetWriterPostResponseData = Array<{
 		email: string;
 	};
 	category: {
-		id: string;
+		id: number;
 		name: string;
 	};
 }>;

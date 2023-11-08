@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PostForm from '../../../lib/post/post-form.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
@@ -8,37 +9,7 @@
 
 <h1>New Post</h1>
 
-<form method="post">
-	<label for="categoryId">Category: </label>
-	<select name="categoryId" id="categoryId">
-		{#each data.categories as category}
-			<option value={category.id}>{category.name}</option>
-		{/each}
-	</select>
-
-	<br />
-
-	<input type="text" name="title" id="title" required placeholder="enter title" />
-
-	<br />
-
-	<textarea
-		name="content"
-		id="content"
-		cols="30"
-		rows="10"
-		required
-		placeholder="enter your content (HTML) ..."
-	/>
-
-	<br />
-
-	<button type="submit">Post</button>
-
-	{#if form?.error}
-		<p style="color: red">{form.error}</p>
-	{/if}
-</form>
+<PostForm availableCategories={data.categories} errorMessage={form?.error} />
 
 <svelte:head>
 	<title>New Post | blog.atj.sh</title>
