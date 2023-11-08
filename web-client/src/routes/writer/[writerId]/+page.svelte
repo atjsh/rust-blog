@@ -6,7 +6,7 @@
 
 <h1>Writer: {data.writer.email}</h1>
 
-<p>self introduce: {data.writer.description}</p>
+<p>{data.writer.description}</p>
 
 <h2>Posts</h2>
 

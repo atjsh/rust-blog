@@ -27,6 +27,16 @@
 </main>
 
 <style lang="scss">
+	:global(body) {
+		font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue,
+			helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+	}
+
+	main {
+		max-width: 80rem;
+		margin: auto;
+	}
+
 	.icon {
 		font-size: 3em;
 		margin-top: 0.5em;
@@ -45,5 +55,12 @@
 				text-decoration: underline;
 			}
 		}
+	}
+
+	footer,
+	footer a {
+		margin-top: 3em;
+		text-align: center;
+		color: gray;
 	}
 </style>
