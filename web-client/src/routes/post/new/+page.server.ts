@@ -1,8 +1,7 @@
-import { COOKIE_SECRET } from '$env/static/private';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { createPost, getCategories } from '../../../lib';
+import { getAccessTokenFromCookie } from '../../../lib/access-token/utils';
 import type { PageServerLoad } from './$types';
-import CryptoJS from 'crypto-js';
 
 export const load: PageServerLoad = async () => {
 	const categories = await getCategories();
@@ -25,13 +24,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const accessToken = cookies.get('accessToken', {
-			decode: (value) => CryptoJS.AES.decrypt(value, COOKIE_SECRET).toString(CryptoJS.enc.Utf8)
-		});
-
-		if (!accessToken) {
-			throw redirect(301, '/login');
-		}
+		const accessToken = getAccessTokenFromCookie(cookies);
 
 		const post = await createPost(
 			Number(categoryId),
