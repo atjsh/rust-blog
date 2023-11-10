@@ -1,4 +1,6 @@
 <script lang="ts">
+	import 'normalize.css';
+
 	import type { LayoutServerData } from './$types';
 
 	export let data: LayoutServerData;
@@ -34,6 +36,7 @@
 
 	main {
 		max-width: 80rem;
+		padding: 0 1rem;
 		margin: auto;
 	}
 
