@@ -24,10 +24,13 @@
 				<div class="thumbnail">
 					<span>📝</span>
 				</div>
-				<div class="title">
-					<span>
+				<div class="title-container">
+					<div class="created-at">
+						{new Date(post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })}
+					</div>
+					<div class="title">
 						{post.title}
-					</span>
+					</div>
 				</div>
 			</a>
 		</li>
@@ -48,8 +51,6 @@
 		li {
 			width: 100%;
 
-			font-size: 1.2em;
-
 			width: 100%;
 
 			a {
@@ -58,13 +59,16 @@
 				width: 100%;
 				display: flex;
 				vertical-align: middle;
+				border: 1px solid white;
+				border-radius: 1rem;
+				padding: 0.2rem;
 
 				&:hover {
-					text-decoration: underline;
+					border: 1px solid rgba(128, 128, 128, 0.5);
 				}
 
 				.thumbnail {
-					border-radius: 1em;
+					border-radius: 1rem;
 					overflow: hidden;
 					background: rgb(234, 234, 234);
 					width: 5em;
@@ -73,13 +77,14 @@
 					padding: 0;
 					margin: 0;
 					flex-shrink: 0;
+					font-size: 1.2em;
 
 					span {
 						margin: auto;
 					}
 				}
 
-				.title {
+				.title-container {
 					width: 100%;
 					height: 5em;
 					display: flex;
@@ -87,10 +92,21 @@
 					word-wrap: break-word;
 					padding-right: 1em;
 					box-sizing: border-box;
+					flex-direction: column;
+					justify-content: center;
 
-					span {
-						margin: auto;
-						margin-left: 1em;
+					& > div {
+						margin-left: 1rem;
+					}
+
+					.title {
+						font-size: 1.2em;
+					}
+
+					.created-at {
+						font-size: 0.7em;
+						color: rgb(100, 100, 100);
+						font-weight: bold;
 					}
 				}
 			}

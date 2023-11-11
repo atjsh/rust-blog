@@ -32,11 +32,11 @@
 	<div class="bottom-menu">
 		<div>
 			<a href="/category/{data.post.category.id}">
-				See other posts from {data.post.category.name} category
+				{data.post.category.name} 카테고리의 다른 글 보기
 			</a>
 		</div>
 		<div>
-			<a href="/writer/{data.post.written_by.id}">See other posts from this post's writer</a>
+			<a href="/writer/{data.post.written_by.id}">이 글 작성자의 다른 글 보기</a>
 		</div>
 	</div>
 </article>

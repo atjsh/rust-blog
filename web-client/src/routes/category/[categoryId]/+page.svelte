@@ -5,9 +5,9 @@
 	export let data: PageServerData;
 </script>
 
-<h1>Category: {data.category.name}</h1>
+<h1>{data.category.name} 카테고리</h1>
 <p>
-	Posts from {data.category.name} category
+	{data.category.name} 카테고리 글 모음.
 </p>
 
 <PostList

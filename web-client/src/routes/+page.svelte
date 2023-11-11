@@ -5,13 +5,13 @@
 	export let data: PageServerData;
 </script>
 
-<h1>Welcome to My Blog</h1>
+<h1>전성훈의 블로그</h1>
 
 <ul>
 	{#each data.categories as category}
 		<li>
 			<h2>
-				Posts from <a href={`/category/${category.id}`}>{category.name}</a> category
+				<a href={`/category/${category.id}`}>{category.name}</a> 카테고리의 글 목록
 			</h2>
 			<PostList categoryWithPosts={{ ...category, posts: category.posts }} />
 		</li>
@@ -19,7 +19,7 @@
 </ul>
 
 <svelte:head>
-	<title>blog.atj.sh</title>
+	<title>전성훈의 블로그 | blog.atj.sh</title>
 </svelte:head>
 
 <style lang="scss">
