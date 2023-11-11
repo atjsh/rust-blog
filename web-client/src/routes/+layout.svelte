@@ -37,7 +37,7 @@
 	main {
 		max-width: 80rem;
 		padding: 0 1rem;
-		margin: auto;
+		margin: 0 auto 2rem;
 	}
 
 	.icon {
