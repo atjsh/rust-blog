@@ -15,10 +15,13 @@
 		<ul>
 			{#if data.isWriter}
 				<li>
-					<b>You</b> wrote this article. You can:
-					<a href="/post/{data.post.id}/edit">edit</a>
-					<a href="/post/{data.post.id}/delete">delete</a>
+					<b>당신</b>이 이 게시글을 작성했습니다. 가능한 동작:
+					<a href="/post/{data.post.id}/edit">수정</a>
+					<a href="/post/{data.post.id}/delete">삭제</a>
 				</li>
+			{/if}
+			{#if data.post.private}
+				<li>이 게시글은 비공개 상태입니다.</li>
 			{/if}
 		</ul>
 	</div>

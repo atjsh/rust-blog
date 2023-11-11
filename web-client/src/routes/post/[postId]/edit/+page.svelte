@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PostForm from '../../../../lib/post/post-form.svelte';
+	import PostForm from '$lib/post/post-form.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;

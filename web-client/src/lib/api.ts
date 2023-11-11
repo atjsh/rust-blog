@@ -32,6 +32,7 @@ export type GetPostResponseData = {
 
 	title: string;
 	content: string;
+	private: boolean;
 	created_at: string;
 
 	written_by: {
@@ -48,6 +49,7 @@ export type GetWriterPostResponseData = Array<{
 	id: number;
 
 	title: string;
+	private: boolean;
 	created_at: string;
 
 	written_by: {
@@ -95,6 +97,23 @@ export async function getCurrentAuthedWriterId(accessToken: string): Promise<num
 	});
 
 	return Number(await response.text());
+}
+
+export async function getCurrentAuthedWriterPosts(
+	accessToken: string
+): Promise<GetWriterPostResponseData> {
+	const response = await serverFetch('/profile/posts', {
+		method: 'GET',
+		headers: {
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
+
+	const js = await response.json();
+
+	console.log(js);
+
+	return js as GetWriterPostResponseData;
 }
 
 export async function logout() {

@@ -5,10 +5,12 @@
 	export let defaultPostValues: {
 		categoryId?: number;
 		title?: string;
+		private?: boolean;
 		content?: string;
 	} = {
 		categoryId: availableCategories[0]?.id,
 		title: '',
+		private: true,
 		content: ''
 	};
 
@@ -18,7 +20,7 @@
 <form method="post">
 	<div class="form-section">
 		<h2>
-			<label for="categoryId">Category</label>
+			<label for="categoryId">카테고리</label>
 		</h2>
 		<select name="categoryId" id="categoryId" bind:value={postValues.categoryId}>
 			{#each availableCategories as category}
@@ -29,7 +31,7 @@
 
 	<div class="form-section">
 		<h2>
-			<label for="title">Title</label>
+			<label for="title">제목</label>
 		</h2>
 
 		<input
@@ -44,7 +46,7 @@
 
 	<div class="form-section">
 		<h2>
-			<label for="content">Content</label>
+			<label for="content">내용</label>
 		</h2>
 
 		<div class="html-editor-container">
@@ -64,13 +66,26 @@
 		</div>
 	</div>
 
-	<div class="buttons">
-		<button type="submit">Post</button>
-	</div>
+	<div class="form-section">
+		<h2>
+			<label for="private">비공개/공개 여부</label>
+		</h2>
 
-	{#if errorMessage}
-		<p style="color: red">{errorMessage}</p>
-	{/if}
+		<input type="checkbox" name="private" id="private" bind:checked={postValues.private} />
+		{#if postValues.private}
+			<label for="private">게시글을 비공개 상태로 저장</label>
+		{:else}
+			<label for="private">게시글을 공개 상태로 저장</label>
+		{/if}
+
+		<div class="buttons">
+			<button type="submit">Post</button>
+		</div>
+
+		{#if errorMessage}
+			<p style="color: red">{errorMessage}</p>
+		{/if}
+	</div>
 </form>
 
 <style lang="scss">
@@ -90,6 +105,10 @@
 			width: 100%;
 			font-size: 1em;
 			padding: 0.3em;
+		}
+
+		input[type='checkbox'] {
+			width: unset;
 		}
 
 		textarea {
