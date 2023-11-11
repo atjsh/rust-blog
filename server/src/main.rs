@@ -108,7 +108,11 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/profile",
             get(routers::auth::get_writer_id_from_auth_header::handler),
         )
-        .route("/profile", patch(routers::writer::update_writer::handler));
+        .route("/profile", patch(routers::writer::update_writer::handler))
+        .route(
+            "/profile/posts",
+            get(routers::writer::get_posts_by_authed_writer::handler),
+        );
 
     let auth_router = Router::new().route(
         "/auth/access-token",

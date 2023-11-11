@@ -12,6 +12,7 @@ pub mod get_post_by_post_id {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -27,6 +28,7 @@ pub mod get_post_by_post_id {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -52,6 +54,7 @@ pub mod get_post_by_post_id {
                 id: self.id,
                 title: self.title,
                 content: self.content,
+                private: self.private,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -76,6 +79,7 @@ pub mod get_post_by_post_id {
                 p.id,
                 p.title,
                 p.content,
+                p.private,
                 p.created_at,
                 u.id as "written_by_id!",
                 u.email as "written_by_email!",
@@ -107,6 +111,7 @@ pub mod create_post {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -122,6 +127,7 @@ pub mod create_post {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -147,6 +153,7 @@ pub mod create_post {
                 id: self.id,
                 title: self.title,
                 content: self.content,
+                private: self.private,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -164,6 +171,7 @@ pub mod create_post {
     pub struct CreatePostBody {
         title: String,
         content: String,
+        private: bool,
         category_id: i32,
     }
 
@@ -178,14 +186,15 @@ pub mod create_post {
             GetPostByPostIdRow,
             r#"
             with inserted as (
-                insert into post (title, content, written_by_id, category_id)
-                values ($1, $2, $3, $4)
+                insert into post (title, content, private, written_by_id, category_id)
+                values ($1, $2, $3, $4, $5)
                 returning *
             )
             select
                 p.id,
                 p.title,
                 p.content,
+                p.private,
                 p.created_at,
                 u.id as "written_by_id",
                 u.email as "written_by_email",
@@ -197,6 +206,7 @@ pub mod create_post {
             "#,
             payload.title,
             payload.content,
+            payload.private,
             writer_id,
             payload.category_id
         )
@@ -218,6 +228,7 @@ pub mod update_post {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -233,6 +244,7 @@ pub mod update_post {
 
         title: String,
         content: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -258,6 +270,7 @@ pub mod update_post {
                 id: self.id,
                 title: self.title,
                 content: self.content,
+                private: self.private,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -275,6 +288,7 @@ pub mod update_post {
     pub struct UpdatePostBody {
         title: String,
         content: String,
+        private: bool,
         category_id: i32,
     }
 
@@ -291,14 +305,15 @@ pub mod update_post {
             r#"
             with updated as (
                 update post
-                set title = $1, content = $2, category_id = $3
-                where id = $4 and written_by_id = $5
+                set title = $1, content = $2, private = $3, category_id = $4
+                where id = $5 and written_by_id = $6
                 returning *
             )
             select
                 p.id,
                 p.title,
                 p.content,
+                p.private,
                 p.created_at,
                 u.id as "written_by_id",
                 u.email as "written_by_email",
@@ -310,6 +325,7 @@ pub mod update_post {
             "#,
             payload.title,
             payload.content,
+            payload.private,
             payload.category_id,
             post_id,
             writer_id

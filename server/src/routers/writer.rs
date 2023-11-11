@@ -56,6 +56,7 @@ pub mod get_posts_by_writer_id {
         id: i64,
 
         title: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -70,6 +71,7 @@ pub mod get_posts_by_writer_id {
         id: i64,
 
         title: String,
+        private: bool,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -95,6 +97,7 @@ pub mod get_posts_by_writer_id {
                 id: row.id,
 
                 title: row.title,
+                private: row.private,
                 created_at: row.created_at,
 
                 written_by: GetPostByPostIdResponseWrittenBy {
@@ -117,11 +120,12 @@ pub mod get_posts_by_writer_id {
         let result = sqlx::query_as!(
             GetPostByWriterRow,
             r#"
-            SELECT post.id, post.title, post.created_at, post.written_by_id, writer.email AS written_by_email, post.category_id, category.name AS category_name
+            SELECT post.id, post.title, post.private, post.created_at, post.written_by_id, writer.email AS written_by_email, post.category_id, category.name AS category_name
             FROM post
             INNER JOIN writer ON post.written_by_id = writer.id
             INNER JOIN category ON post.category_id = category.id
             WHERE post.written_by_id = $1
+            AND post.private = false
             order by post.created_at desc
             "#,
             writer_id
@@ -173,5 +177,98 @@ pub mod update_writer {
         })?;
 
         Ok(StatusCode::OK)
+    }
+}
+
+pub mod get_posts_by_authed_writer {
+    use super::*;
+
+    struct GetPostByWriterRow {
+        id: i64,
+
+        title: String,
+        private: bool,
+        created_at: NaiveDateTime,
+
+        written_by_id: i64,
+        written_by_email: String,
+
+        category_id: i64,
+        category_name: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByWriterResponse {
+        id: i64,
+
+        title: String,
+        private: bool,
+        created_at: NaiveDateTime,
+
+        written_by: GetPostByPostIdResponseWrittenBy,
+
+        category: GetPostByPostIdResponseCategory,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseWrittenBy {
+        id: i64,
+        email: String,
+    }
+
+    #[derive(Deserialize, Serialize)]
+    struct GetPostByPostIdResponseCategory {
+        id: i64,
+        name: String,
+    }
+
+    impl From<GetPostByWriterRow> for GetPostByWriterResponse {
+        fn from(row: GetPostByWriterRow) -> Self {
+            Self {
+                id: row.id,
+
+                title: row.title,
+                created_at: row.created_at,
+                private: row.private,
+
+                written_by: GetPostByPostIdResponseWrittenBy {
+                    id: row.written_by_id,
+                    email: row.written_by_email,
+                },
+
+                category: GetPostByPostIdResponseCategory {
+                    id: row.category_id,
+                    name: row.category_name,
+                },
+            }
+        }
+    }
+
+    pub async fn handler(
+        DatabaseConnection(mut conn): DatabaseConnection,
+        authed_writer: AuthedWriter,
+    ) -> Result<impl IntoResponse, (StatusCode, String)> {
+        let result = sqlx::query_as!(
+            GetPostByWriterRow,
+            r#"
+            SELECT post.id, post.title, post.created_at, post.private, post.written_by_id, writer.email AS written_by_email, post.category_id, category.name AS category_name
+            FROM post
+            INNER JOIN writer ON post.written_by_id = writer.id
+            INNER JOIN category ON post.category_id = category.id
+            WHERE post.written_by_id = $1
+            order by post.created_at desc
+            "#,
+            authed_writer.id
+        )
+        .fetch_all(&mut *conn)
+        .await
+        .unwrap();
+
+        Ok(axum::Json(
+            result
+                .into_iter()
+                .map(|row| row.into())
+                .collect::<Vec<GetPostByWriterResponse>>(),
+        ))
     }
 }
