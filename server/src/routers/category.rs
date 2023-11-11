@@ -133,6 +133,7 @@ pub mod get_category_posts {
             inner join writer on post.written_by_id = writer.id
             inner join category on post.category_id = category.id
             where post.category_id = $1
+            order by post.created_at desc
             "#,
             category_id
         )

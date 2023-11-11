@@ -122,6 +122,7 @@ pub mod get_posts_by_writer_id {
             INNER JOIN writer ON post.written_by_id = writer.id
             INNER JOIN category ON post.category_id = category.id
             WHERE post.written_by_id = $1
+            order by post.created_at desc
             "#,
             writer_id
         )
