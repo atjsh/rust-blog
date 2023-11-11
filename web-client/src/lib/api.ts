@@ -109,11 +109,7 @@ export async function getCurrentAuthedWriterPosts(
 		}
 	});
 
-	const js = await response.json();
-
-	console.log(js);
-
-	return js as GetWriterPostResponseData;
+	return (await response.json()) as GetWriterPostResponseData;
 }
 
 export async function logout() {
@@ -158,6 +154,7 @@ export async function createPost(
 	categoryId: number,
 	title: string,
 	content: string,
+	isPrivate: boolean,
 	accessToken: string
 ): Promise<GetPostResponseData> {
 	return (await (
@@ -166,6 +163,7 @@ export async function createPost(
 			body: JSON.stringify({
 				title,
 				content,
+				is_private: isPrivate,
 				category_id: categoryId
 			}),
 			headers: {
@@ -181,6 +179,7 @@ export async function updatePost(
 	categoryId: number,
 	title: string,
 	content: string,
+	isPrivate: boolean,
 	accessToken: string
 ): Promise<GetPostResponseData> {
 	const response = await serverFetch(`/post/${postId}`, {
@@ -188,6 +187,7 @@ export async function updatePost(
 		body: JSON.stringify({
 			title,
 			content,
+			is_private: isPrivate,
 			category_id: categoryId
 		}),
 		headers: {

@@ -16,6 +16,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const title = data.get('title');
 		const content = data.get('content');
+		const isPrivate = data.get('isPrivate');
 		const categoryId = data.get('categoryId');
 
 		if (!categoryId || !title || !content) {
@@ -30,6 +31,7 @@ export const actions: Actions = {
 			Number(categoryId),
 			title.toString(),
 			content.toString(),
+			isPrivate === 'on',
 			accessToken
 		);
 

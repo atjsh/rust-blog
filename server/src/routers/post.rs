@@ -171,7 +171,7 @@ pub mod create_post {
     pub struct CreatePostBody {
         title: String,
         content: String,
-        private: bool,
+        is_private: bool,
         category_id: i32,
     }
 
@@ -206,7 +206,7 @@ pub mod create_post {
             "#,
             payload.title,
             payload.content,
-            payload.private,
+            payload.is_private,
             writer_id,
             payload.category_id
         )
@@ -288,7 +288,7 @@ pub mod update_post {
     pub struct UpdatePostBody {
         title: String,
         content: String,
-        private: bool,
+        is_private: bool,
         category_id: i32,
     }
 
@@ -325,7 +325,7 @@ pub mod update_post {
             "#,
             payload.title,
             payload.content,
-            payload.private,
+            payload.is_private,
             payload.category_id,
             post_id,
             writer_id

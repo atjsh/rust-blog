@@ -28,11 +28,12 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const title = data.get('title');
 		const content = data.get('content');
+		const isPrivate = data.get('isPrivate');
 		const categoryId = data.get('categoryId');
 
 		if (!categoryId || !title || !content) {
 			return fail(400, {
-				error: 'categoryId, title, and content are required'
+				error: 'categoryId, title, content are required'
 			});
 		}
 
@@ -43,6 +44,7 @@ export const actions: Actions = {
 			Number(categoryId),
 			title.toString(),
 			content.toString(),
+			isPrivate === 'on',
 			accessToken
 		);
 

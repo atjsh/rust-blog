@@ -14,6 +14,7 @@
 	defaultPostValues={{
 		categoryId: data.post.category.id,
 		title: data.post.title,
+		private: data.post.private,
 		content: data.post.content
 	}}
 	errorMessage={form?.error}

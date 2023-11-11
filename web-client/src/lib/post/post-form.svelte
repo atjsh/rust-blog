@@ -68,14 +68,14 @@
 
 	<div class="form-section">
 		<h2>
-			<label for="private">비공개/공개 여부</label>
+			<label for="isPrivate">비공개/공개 여부</label>
 		</h2>
 
-		<input type="checkbox" name="private" id="private" bind:checked={postValues.private} />
+		<input type="checkbox" name="isPrivate" id="isPrivate" bind:checked={postValues.private} />
 		{#if postValues.private}
-			<label for="private">게시글을 비공개 상태로 저장</label>
+			<label for="isPrivate">게시글을 비공개 상태로 저장</label>
 		{:else}
-			<label for="private">게시글을 공개 상태로 저장</label>
+			<label for="isPrivate">게시글을 공개 상태로 저장</label>
 		{/if}
 
 		<div class="buttons">
