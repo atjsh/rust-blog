@@ -11,6 +11,8 @@
 		title: '',
 		content: ''
 	};
+
+	let postValues = defaultPostValues;
 </script>
 
 <form method="post">
@@ -18,7 +20,7 @@
 		<h2>
 			<label for="categoryId">Category</label>
 		</h2>
-		<select name="categoryId" id="categoryId" value={defaultPostValues.categoryId}>
+		<select name="categoryId" id="categoryId" bind:value={postValues.categoryId}>
 			{#each availableCategories as category}
 				<option value={category.id}>{category.name}</option>
 			{/each}
@@ -36,7 +38,7 @@
 			id="title"
 			required
 			placeholder="enter title"
-			value={defaultPostValues.title}
+			bind:value={postValues.title}
 		/>
 	</div>
 
@@ -45,15 +47,21 @@
 			<label for="content">Content</label>
 		</h2>
 
-		<textarea
-			name="content"
-			id="content"
-			cols="30"
-			rows="10"
-			required
-			placeholder="enter your content (HTML) ..."
-			value={defaultPostValues.content}
-		/>
+		<div class="html-editor-container">
+			<textarea
+				class="html-editor"
+				name="content"
+				id="content"
+				cols="30"
+				rows="10"
+				required
+				placeholder="enter your content (HTML) ..."
+				bind:value={postValues.content}
+			/>
+			<div class="html-preview">
+				{@html postValues.content}
+			</div>
+		</div>
 	</div>
 
 	<div class="buttons">
@@ -67,7 +75,6 @@
 
 <style lang="scss">
 	form {
-		max-width: 60rem;
 		margin: 0 auto;
 		padding: 1em;
 		display: flex;
@@ -86,9 +93,32 @@
 		}
 
 		textarea {
-			width: 100%;
 			padding: 0.3em;
+		}
+
+		.html-editor-container {
+			display: flex;
+			gap: 1em;
 			height: 30rem;
+
+			.html-editor {
+				flex: 1;
+				border: unset;
+				border-radius: 0.5em;
+				resize: none;
+				border: 1px solid #d9d9d9;
+				padding: 1em;
+			}
+
+			.html-preview {
+				flex: 1;
+				border: unset;
+				border-radius: 0.5em;
+				padding: 0.3em;
+				background: #f5f5f5;
+				overflow: auto;
+				padding: 1em;
+			}
 		}
 
 		.buttons {
