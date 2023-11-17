@@ -32,9 +32,27 @@
 </main>
 
 <style lang="scss">
+	:root {
+		--theme-bg-color: 255, 255, 255;
+		--theme-text-color: 0, 0, 0;
+		--theme-a-color: 0, 0, 255;
+	}
+
 	:global(body) {
 		font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue,
 			helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+		color: rgb(var(--theme-text-color));
+		background-color: rgb(var(--theme-bg-color));
+
+		@media (prefers-color-scheme: dark) {
+			--theme-bg-color: 15, 15, 15;
+			--theme-text-color: 255, 255, 255;
+			--theme-a-color: 236, 159, 25;
+		}
+	}
+
+	:global(a) {
+		color: var(--theme-a-color);
 	}
 
 	main {

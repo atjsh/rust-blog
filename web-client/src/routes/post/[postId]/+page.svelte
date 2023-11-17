@@ -58,7 +58,7 @@
 	}
 
 	.post-container {
-		border: 1px solid rgb(198, 198, 198);
+		border: 1px solid gray;
 		border-radius: 0.8rem;
 		padding: 2em 0.7em;
 

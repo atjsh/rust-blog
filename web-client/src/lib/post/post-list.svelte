@@ -54,17 +54,17 @@
 			width: 100%;
 
 			a {
-				color: black;
+				color: rgb(var(--theme-text-color));
 				text-decoration: none;
 				width: 100%;
 				display: flex;
 				vertical-align: middle;
-				border: 1px solid white;
+				border: 1px solid rgba(var(--theme-text-color), 0.3);
 				border-radius: 1rem;
 				padding: 0.2rem;
 
 				&:hover {
-					border: 1px solid rgba(128, 128, 128, 0.5);
+					border: 1px solid rgba(128, 128, 128, 0.171);
 				}
 
 				.thumbnail {
@@ -78,6 +78,10 @@
 					margin: 0;
 					flex-shrink: 0;
 					font-size: 1.2em;
+
+					@media (prefers-color-scheme: dark) {
+						background: rgb(50, 50, 50);
+					}
 
 					span {
 						margin: auto;
