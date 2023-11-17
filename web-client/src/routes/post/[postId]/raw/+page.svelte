@@ -6,13 +6,18 @@
 
 <article>
 	<div>
-		<h1>{data.post.title}</h1>
+		<h1>{data.post.title} (raw)</h1>
 		<div>
 			{new Date(data.post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })}
 		</div>
 	</div>
 	<div>
 		<ul>
+			<li>
+				렌더링 전의 게시글 데이터를 보고 있습니다. <a href="/post/{data.post.id}"
+					>렌더링 버전 보기</a
+				>
+			</li>
 			{#if data.isWriter}
 				<li>
 					<b>당신</b>이 이 게시글을 작성했습니다. 가능한 동작:
@@ -27,9 +32,9 @@
 	</div>
 
 	<div class="post-container">
-		<div class="post-content">
-			{@html data.post.content}
-		</div>
+		<pre class="post-content">
+			{data.post.content}
+		</pre>
 	</div>
 
 	<div class="bottom-menu">
@@ -41,14 +46,11 @@
 		<div>
 			<a href="/writer/{data.post.written_by.id}">이 글 작성자의 다른 글 보기</a>
 		</div>
-		<div>
-			<a href="/post/{data.post.id}/raw">렌더링 전의 게시글 데이터 보기</a>
-		</div>
 	</div>
 </article>
 
 <svelte:head>
-	<title>{data.post.title} | blog.atj.sh</title>
+	<title>{data.post.title} (raw) | blog.atj.sh</title>
 </svelte:head>
 
 <style lang="scss">
@@ -70,8 +72,8 @@
 		.post-content {
 			word-break: keep-all;
 			word-wrap: break-word;
-			max-width: 60rem;
 			margin: auto;
+			overflow-x: auto;
 		}
 	}
 
