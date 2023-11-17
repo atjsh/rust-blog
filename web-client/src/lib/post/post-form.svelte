@@ -74,14 +74,14 @@
 
 		<div class="content-editor-container">
 			<CodeMirror
-				class="content-editor"
+				class="content-editor content-editor-item"
 				placeholder="{postValues.contentType &&
 					getContentTypeLabel(postValues.contentType)} 양식으로 내용을 입력하세요..."
 				bind:value={postValues.content}
 				lang={postValues.contentType == 'md' ? markdown() : html()}
 			/>
 			<input type="hidden" name="content" value={postValues.content} />
-			<div class="html-preview">
+			<div class="html-preview content-editor-item">
 				{@html renderedContent}
 			</div>
 		</div>
@@ -112,6 +112,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2em;
+		box-sizing: border-box;
 
 		select {
 			font-size: 1em;
@@ -140,6 +141,24 @@
 			display: flex;
 			gap: 1em;
 			height: 30rem;
+			position: relative;
+			width: 100%;
+
+			@media (max-width: 768px) {
+				flex-direction: column;
+				flex-flow: column-reverse;
+			}
+
+			:global(.content-editor-item) {
+				max-width: 50%;
+				display: inline-block;
+				box-sizing: border-box;
+
+				@media (max-width: 768px) {
+					max-width: unset;
+					width: 100%;
+				}
+			}
 
 			:global(.content-editor) {
 				flex: 1;
