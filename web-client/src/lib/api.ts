@@ -1,6 +1,8 @@
 import { PUBLIC_SERVER_URL } from '$env/static/public';
 import returnFetch from 'return-fetch';
 
+export type PostContentType = 'html' | 'md';
+
 const serverFetch = returnFetch({
 	baseUrl: PUBLIC_SERVER_URL
 });
@@ -32,6 +34,7 @@ export type GetPostResponseData = {
 
 	title: string;
 	content: string;
+	content_type: PostContentType;
 	private: boolean;
 	created_at: string;
 
@@ -143,12 +146,6 @@ export async function getCategoryPosts(categoryId: number): Promise<GetCategoryP
 }
 
 export async function getPost(postId: number): Promise<GetPostResponseData> {
-	// return (await (
-	// 	await serverFetch(`/post/${postId}`, {
-	// 		method: 'GET'
-	// 	})
-	// ).json()) as GetPostResponseData;
-
 	const response = await serverFetch(`/post/${postId}`, {
 		method: 'GET'
 	});
@@ -164,6 +161,7 @@ export async function createPost(
 	categoryId: number,
 	title: string,
 	content: string,
+	contentType: PostContentType,
 	isPrivate: boolean,
 	accessToken: string
 ): Promise<GetPostResponseData> {
@@ -173,6 +171,7 @@ export async function createPost(
 			body: JSON.stringify({
 				title,
 				content,
+				content_type: contentType,
 				is_private: isPrivate,
 				category_id: categoryId
 			}),
@@ -189,6 +188,7 @@ export async function updatePost(
 	categoryId: number,
 	title: string,
 	content: string,
+	contenyType: PostContentType,
 	isPrivate: boolean,
 	accessToken: string
 ): Promise<GetPostResponseData> {
@@ -197,6 +197,7 @@ export async function updatePost(
 		body: JSON.stringify({
 			title,
 			content,
+			content_type: contenyType,
 			is_private: isPrivate,
 			category_id: categoryId
 		}),

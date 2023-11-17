@@ -15,7 +15,8 @@
 		categoryId: data.post.category.id,
 		title: data.post.title,
 		private: data.post.private,
-		content: data.post.content
+		content: data.post.content,
+		contentType: data.post.content_type
 	}}
 	errorMessage={form?.error}
 />

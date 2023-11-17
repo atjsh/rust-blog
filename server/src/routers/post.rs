@@ -12,6 +12,7 @@ pub mod get_post_by_post_id {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -28,6 +29,7 @@ pub mod get_post_by_post_id {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -55,6 +57,7 @@ pub mod get_post_by_post_id {
                 title: self.title,
                 content: self.content,
                 private: self.private,
+                content_type: self.content_type,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -79,6 +82,7 @@ pub mod get_post_by_post_id {
                 p.id,
                 p.title,
                 p.content,
+                p.content_type,
                 p.private,
                 p.created_at,
                 u.id as "written_by_id!",
@@ -111,6 +115,7 @@ pub mod create_post {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -127,6 +132,7 @@ pub mod create_post {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -153,6 +159,7 @@ pub mod create_post {
                 id: self.id,
                 title: self.title,
                 content: self.content,
+                content_type: self.content_type,
                 private: self.private,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
@@ -171,6 +178,7 @@ pub mod create_post {
     pub struct CreatePostBody {
         title: String,
         content: String,
+        content_type: String,
         is_private: bool,
         category_id: i32,
     }
@@ -182,18 +190,23 @@ pub mod create_post {
     ) -> Result<impl IntoResponse, StatusCode> {
         let writer_id = authed_writer.id;
 
+        if payload.content_type != "html" && payload.content_type != "markdown" {
+            return Err(StatusCode::BAD_REQUEST);
+        }
+
         let post = sqlx::query_as!(
             GetPostByPostIdRow,
             r#"
             with inserted as (
-                insert into post (title, content, private, written_by_id, category_id)
-                values ($1, $2, $3, $4, $5)
+                insert into post (title, content, content_type, private, written_by_id, category_id)
+                values ($1, $2, $3, $4, $5, $6)
                 returning *
             )
             select
                 p.id,
                 p.title,
                 p.content,
+                p.content_type,
                 p.private,
                 p.created_at,
                 u.id as "written_by_id",
@@ -206,6 +219,7 @@ pub mod create_post {
             "#,
             payload.title,
             payload.content,
+            payload.content_type,
             payload.is_private,
             writer_id,
             payload.category_id
@@ -228,6 +242,7 @@ pub mod update_post {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -244,6 +259,7 @@ pub mod update_post {
 
         title: String,
         content: String,
+        content_type: String,
         private: bool,
         created_at: NaiveDateTime,
 
@@ -270,6 +286,7 @@ pub mod update_post {
                 id: self.id,
                 title: self.title,
                 content: self.content,
+                content_type: self.content_type,
                 private: self.private,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
@@ -288,6 +305,7 @@ pub mod update_post {
     pub struct UpdatePostBody {
         title: String,
         content: String,
+        content_type: String,
         is_private: bool,
         category_id: i32,
     }
@@ -300,19 +318,24 @@ pub mod update_post {
     ) -> Result<impl IntoResponse, StatusCode> {
         let writer_id = authed_writer.id;
 
+        if payload.content_type != "html" && payload.content_type != "markdown" {
+            return Err(StatusCode::BAD_REQUEST);
+        }
+
         let post = sqlx::query_as!(
             GetPostByPostIdRow,
             r#"
             with updated as (
                 update post
-                set title = $1, content = $2, private = $3, category_id = $4
-                where id = $5 and written_by_id = $6
+                set title = $1, content = $2, content_type = $3, private = $4, category_id = $5
+                where id = $6 and written_by_id = $7
                 returning *
             )
             select
                 p.id,
                 p.title,
                 p.content,
+                p.content_type,
                 p.private,
                 p.created_at,
                 u.id as "written_by_id",
@@ -325,6 +348,7 @@ pub mod update_post {
             "#,
             payload.title,
             payload.content,
+            payload.content_type,
             payload.is_private,
             payload.category_id,
             post_id,

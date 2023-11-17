@@ -1,5 +1,5 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { createPost, getCategories } from '../../../lib';
+import { createPost, getCategories, type PostContentType } from '../../../lib';
 import { getAccessTokenFromCookie } from '../../../lib/access-token/utils';
 import type { PageServerLoad } from './$types';
 
@@ -18,8 +18,9 @@ export const actions: Actions = {
 		const content = data.get('content');
 		const isPrivate = data.get('isPrivate');
 		const categoryId = data.get('categoryId');
+		const contentType = data.get('contentType');
 
-		if (!categoryId || !title || !content) {
+		if (!categoryId || !title || !content || !contentType) {
 			return fail(400, {
 				error: 'categoryId, title, and content are required'
 			});
@@ -31,6 +32,7 @@ export const actions: Actions = {
 			Number(categoryId),
 			title.toString(),
 			content.toString(),
+			contentType.toString() as PostContentType,
 			isPrivate === 'on',
 			accessToken
 		);

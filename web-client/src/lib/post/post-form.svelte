@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { PostContentType } from '../api';
+
 	export let errorMessage: string | undefined;
 	export let availableCategories: { id: number; name: string }[];
 
@@ -7,11 +9,13 @@
 		title?: string;
 		private?: boolean;
 		content?: string;
+		contentType?: PostContentType;
 	} = {
 		categoryId: availableCategories[0]?.id,
 		title: '',
 		private: true,
-		content: ''
+		content: '',
+		contentType: 'html'
 	};
 
 	let postValues = defaultPostValues;
@@ -77,15 +81,26 @@
 		{:else}
 			<label for="isPrivate">게시글을 공개 상태로 저장</label>
 		{/if}
-
-		<div class="buttons">
-			<button type="submit">Post</button>
-		</div>
-
-		{#if errorMessage}
-			<p style="color: red">{errorMessage}</p>
-		{/if}
 	</div>
+
+	<div class="form-section">
+		<h2>
+			<label for="contentType">컨텐츠 타입</label>
+		</h2>
+
+		<select name="contentType" id="contentType" bind:value={postValues.contentType}>
+			<option value="html">HTML</option>
+			<option value="markdown">Markdown</option>
+		</select>
+	</div>
+
+	<div class="buttons">
+		<button type="submit">Post</button>
+	</div>
+
+	{#if errorMessage}
+		<p style="color: red">{errorMessage}</p>
+	{/if}
 </form>
 
 <style lang="scss">
