@@ -30,6 +30,8 @@
 		<div class="post-content">
 			{#if data.post.content_type === 'html'}
 				{@html data.post.content}
+			{:else}
+				{@html data.post.content}
 			{/if}
 		</div>
 	</div>
