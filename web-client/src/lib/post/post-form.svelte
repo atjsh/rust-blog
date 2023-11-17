@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { micromark } from 'micromark';
+	import CodeMirror from 'svelte-codemirror-editor';
+	import { html } from '@codemirror/lang-html';
+	import { markdown } from '@codemirror/lang-markdown';
 	import type { PostContentType } from '../api';
 	import { getContentTypeLabel } from './post-utils';
 
@@ -21,6 +24,7 @@
 		content: defaultPostValues.content ?? '',
 		contentType: defaultPostValues.contentType ?? 'html'
 	};
+	let codeMirrorContainer: HTMLDivElement;
 
 	$: renderedContent =
 		postValues.contentType == 'md' ? micromark(postValues.content) : postValues.content;
@@ -70,17 +74,14 @@
 		</h2>
 
 		<div class="html-editor-container">
-			<textarea
+			<CodeMirror
 				class="html-editor"
-				name="content"
-				id="content"
-				cols="30"
-				rows="10"
-				required
 				placeholder="{postValues.contentType &&
 					getContentTypeLabel(postValues.contentType)} 양식으로 내용을 입력하세요..."
 				bind:value={postValues.content}
+				lang={postValues.contentType == 'md' ? markdown() : html()}
 			/>
+			<input type="hidden" name="content" value={postValues.content} />
 			<div class="html-preview">
 				{@html renderedContent}
 			</div>
@@ -145,7 +146,7 @@
 			gap: 1em;
 			height: 30rem;
 
-			.html-editor {
+			:global(.html-editor) {
 				flex: 1;
 				border: unset;
 				border-radius: 0.5em;
