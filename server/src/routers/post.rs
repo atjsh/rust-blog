@@ -190,7 +190,7 @@ pub mod create_post {
     ) -> Result<impl IntoResponse, StatusCode> {
         let writer_id = authed_writer.id;
 
-        if payload.content_type != "html" && payload.content_type != "markdown" {
+        if payload.content_type != "html" && payload.content_type != "md" {
             return Err(StatusCode::BAD_REQUEST);
         }
 
@@ -318,7 +318,7 @@ pub mod update_post {
     ) -> Result<impl IntoResponse, StatusCode> {
         let writer_id = authed_writer.id;
 
-        if payload.content_type != "html" && payload.content_type != "markdown" {
+        if payload.content_type != "html" && payload.content_type != "md" {
             return Err(StatusCode::BAD_REQUEST);
         }
 
