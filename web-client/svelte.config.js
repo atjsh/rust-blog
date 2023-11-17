@@ -5,7 +5,7 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 const config = {
 	preprocess: vitePreprocess(),
 	optimizeDeps: {
-		exclude: ['codemirror', '@codemirror/language-javascript' /* ... */]
+		exclude: ['codemirror']
 	},
 
 	kit: {

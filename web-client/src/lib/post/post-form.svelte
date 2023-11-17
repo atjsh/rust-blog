@@ -136,10 +136,6 @@
 			width: unset;
 		}
 
-		textarea {
-			padding: 0.3em;
-		}
-
 		.content-editor-container {
 			display: flex;
 			gap: 1em;
