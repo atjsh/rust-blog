@@ -37,6 +37,7 @@
 		"@js-temporal/polyfill": "^0.4.4",
 		"crypto-js": "^4.1.1",
 		"js-cookie": "^3.0.5",
+		"micromark": "^4.0.0",
 		"reset-css": "^5.0.2",
 		"return-fetch": "^0.4.5",
 		"svelte-persisted-store": "^0.7.0"

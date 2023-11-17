@@ -28,11 +28,7 @@
 
 	<div class="post-container">
 		<div class="post-content">
-			{#if data.post.content_type === 'html'}
-				{@html data.post.content}
-			{:else}
-				{@html data.post.content}
-			{/if}
+			{@html data.post.renderedContent}
 		</div>
 	</div>
 

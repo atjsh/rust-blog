@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getContentTypeLabel } from '../../../../lib';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -6,7 +7,7 @@
 
 <article>
 	<div>
-		<h1>{data.post.title} (raw)</h1>
+		<h1><code>{data.post.title} (Raw {getContentTypeLabel(data.post.content_type)})</code></h1>
 		<div>
 			{new Date(data.post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })}
 		</div>
@@ -32,9 +33,7 @@
 	</div>
 
 	<div class="post-container">
-		<pre class="post-content">
-			{data.post.content}
-		</pre>
+		<pre class="post-content">{data.post.content}</pre>
 	</div>
 
 	<div class="bottom-menu">

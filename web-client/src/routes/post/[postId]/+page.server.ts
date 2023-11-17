@@ -3,6 +3,7 @@ import { getCurrentAuthedWriterId, getPost, type GetPostResponseData } from '$li
 import CryptoJS from 'crypto-js';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
+import { micromark } from 'micromark';
 
 export const load: PageServerLoad = async ({ cookies, params }) => {
 	const { postId } = params;
@@ -36,7 +37,10 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
 	}
 
 	return {
-		post,
+		post: {
+			...post,
+			renderedContent: post.content_type === 'md' ? micromark(post.content) : post.content
+		},
 		isWriter
 	};
 };

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { micromark } from 'micromark';
 	import type { PostContentType } from '../api';
+	import { getContentTypeLabel } from './post-utils';
 
 	export let errorMessage: string | undefined;
 	export let availableCategories: { id: number; name: string }[];
@@ -10,15 +12,18 @@
 		private?: boolean;
 		content?: string;
 		contentType?: PostContentType;
-	} = {
-		categoryId: availableCategories[0]?.id,
-		title: '',
-		private: true,
-		content: '',
-		contentType: 'html'
+	} = {};
+
+	let postValues = {
+		categoryId: defaultPostValues.categoryId ?? availableCategories[0]?.id,
+		title: defaultPostValues.title ?? '',
+		private: defaultPostValues.private ?? true,
+		content: defaultPostValues.content ?? '',
+		contentType: defaultPostValues.contentType ?? 'html'
 	};
 
-	let postValues = defaultPostValues;
+	$: renderedContent =
+		postValues.contentType == 'md' ? micromark(postValues.content) : postValues.content;
 </script>
 
 <form method="post">
@@ -43,9 +48,20 @@
 			name="title"
 			id="title"
 			required
-			placeholder="enter title"
+			placeholder="제목을 입력하세요..."
 			bind:value={postValues.title}
 		/>
+	</div>
+
+	<div class="form-section">
+		<h2>
+			<label for="contentType">컨텐츠 타입</label>
+		</h2>
+
+		<select name="contentType" id="contentType" bind:value={postValues.contentType}>
+			<option value="html">{getContentTypeLabel('html')}</option>
+			<option value="md">{getContentTypeLabel('md')}</option>
+		</select>
 	</div>
 
 	<div class="form-section">
@@ -61,11 +77,12 @@
 				cols="30"
 				rows="10"
 				required
-				placeholder="enter your content (HTML) ..."
+				placeholder="{postValues.contentType &&
+					getContentTypeLabel(postValues.contentType)} 양식으로 내용을 입력하세요..."
 				bind:value={postValues.content}
 			/>
 			<div class="html-preview">
-				{@html postValues.content}
+				{@html renderedContent}
 			</div>
 		</div>
 	</div>
@@ -76,22 +93,7 @@
 		</h2>
 
 		<input type="checkbox" name="isPrivate" id="isPrivate" bind:checked={postValues.private} />
-		{#if postValues.private}
-			<label for="isPrivate">게시글을 비공개 상태로 저장</label>
-		{:else}
-			<label for="isPrivate">게시글을 공개 상태로 저장</label>
-		{/if}
-	</div>
-
-	<div class="form-section">
-		<h2>
-			<label for="contentType">컨텐츠 타입</label>
-		</h2>
-
-		<select name="contentType" id="contentType" bind:value={postValues.contentType}>
-			<option value="html">HTML</option>
-			<option value="markdown">Markdown</option>
-		</select>
+		<label for="isPrivate">게시글을 비공개 상태로 저장</label>
 	</div>
 
 	<div class="buttons">
