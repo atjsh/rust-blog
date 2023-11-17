@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { micromark } from 'micromark';
-	import CodeMirror from 'svelte-codemirror-editor';
 	import { html } from '@codemirror/lang-html';
 	import { markdown } from '@codemirror/lang-markdown';
+	import { micromark } from 'micromark';
+	import CodeMirror from 'svelte-codemirror-editor';
 	import type { PostContentType } from '../api';
 	import { getContentTypeLabel } from './post-utils';
 
@@ -24,7 +24,6 @@
 		content: defaultPostValues.content ?? '',
 		contentType: defaultPostValues.contentType ?? 'html'
 	};
-	let codeMirrorContainer: HTMLDivElement;
 
 	$: renderedContent =
 		postValues.contentType == 'md' ? micromark(postValues.content) : postValues.content;
@@ -73,9 +72,9 @@
 			<label for="content">내용</label>
 		</h2>
 
-		<div class="html-editor-container">
+		<div class="content-editor-container">
 			<CodeMirror
-				class="html-editor"
+				class="content-editor"
 				placeholder="{postValues.contentType &&
 					getContentTypeLabel(postValues.contentType)} 양식으로 내용을 입력하세요..."
 				bind:value={postValues.content}
@@ -141,12 +140,12 @@
 			padding: 0.3em;
 		}
 
-		.html-editor-container {
+		.content-editor-container {
 			display: flex;
 			gap: 1em;
 			height: 30rem;
 
-			:global(.html-editor) {
+			:global(.content-editor) {
 				flex: 1;
 				border: unset;
 				border-radius: 0.5em;
