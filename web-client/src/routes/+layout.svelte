@@ -52,7 +52,7 @@
 	}
 
 	:global(a) {
-		color: var(--theme-a-color);
+		color: rgb(var(--theme-a-color));
 	}
 
 	main {
