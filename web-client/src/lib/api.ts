@@ -143,11 +143,21 @@ export async function getCategoryPosts(categoryId: number): Promise<GetCategoryP
 }
 
 export async function getPost(postId: number): Promise<GetPostResponseData> {
-	return (await (
-		await serverFetch(`/post/${postId}`, {
-			method: 'GET'
-		})
-	).json()) as GetPostResponseData;
+	// return (await (
+	// 	await serverFetch(`/post/${postId}`, {
+	// 		method: 'GET'
+	// 	})
+	// ).json()) as GetPostResponseData;
+
+	const response = await serverFetch(`/post/${postId}`, {
+		method: 'GET'
+	});
+
+	if (response.status !== 200) {
+		throw Error('Failed to get post');
+	}
+
+	return (await response.json()) as GetPostResponseData;
 }
 
 export async function createPost(
