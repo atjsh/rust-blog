@@ -167,6 +167,7 @@
 				resize: none;
 				border: 1px solid #d9d9d9;
 				padding: 1em;
+				overflow: auto;
 
 				@media (prefers-color-scheme: dark) {
 					background: black;
