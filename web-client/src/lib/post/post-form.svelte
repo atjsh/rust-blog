@@ -79,6 +79,7 @@
 					getContentTypeLabel(postValues.contentType)} 양식으로 내용을 입력하세요..."
 				bind:value={postValues.content}
 				lang={postValues.contentType == 'md' ? markdown() : html()}
+				lineWrapping={true}
 			/>
 			<input type="hidden" name="content" value={postValues.content} />
 			<div class="html-preview content-editor-item">
