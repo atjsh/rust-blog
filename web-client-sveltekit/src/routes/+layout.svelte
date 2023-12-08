@@ -20,8 +20,6 @@
 		<p>
 			2023 <a href="https://atj.sh/">atjsh</a>. All rights reserved. <br /><br />
 			이 블로그의 소스코드는
-			<a href="https://github.com/atjsh/rust-blog" target="_blank">github.com/atjsh/rust-blog</a
-			>에서 확인 가능합니다.
 		</p>
 		{#if data.authed}
 			<a href="/profile">Profile</a> /
