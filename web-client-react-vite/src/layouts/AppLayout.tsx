@@ -1,6 +1,6 @@
-import "./App.css";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 
-export function App() {
+export const AppLayout: React.FC = () => {
   return (
     <>
       <header>
@@ -11,17 +11,9 @@ export function App() {
           </div>
         </a>
       </header>
-      <main>
-        <h1>전성훈의 블로그</h1>
-        <ul>
-          <li>
-            <h2>
-              <a href={`/category`}>ㅇㅇ</a> 카테고리의 글 목록
-            </h2>
-          </li>
-        </ul>
-      </main>
+      <ScrollRestoration />
+      <Outlet />
       <footer></footer>
     </>
   );
-}
+};
