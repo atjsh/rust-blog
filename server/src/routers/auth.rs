@@ -236,7 +236,7 @@ pub mod get_access_token_with_google_oauth {
         let mut headers = HeaderMap::new();
         headers.insert("access-token", HeaderValue::from(token.unwrap()));
 
-        Ok(Redirect::new(
+        Ok(Redirect::(
             std::env::var(env_values::GOOGLE_REDIRECT_URI).unwrap(),
         ))
     }
