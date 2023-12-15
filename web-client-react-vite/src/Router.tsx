@@ -26,6 +26,7 @@ export const router = createBrowserRouter(
           };
         }}
       ></Route>
+      <Route path="/login" lazy={() => import("./pages/LoginPage")}></Route>
     </Route>
   )
 );

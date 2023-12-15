@@ -768,6 +768,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/gapi@npm:^0.0.47":
+  version: 0.0.47
+  resolution: "@types/gapi@npm:0.0.47"
+  checksum: 014d7326b6182d260c33ae5b7317d7c0271263dde83b9d24fccd78481dce8877f0ec7a110467a626bf9e1c0b73f2b1935c31f5ef66f71f1328ae0926f6e8b0fe
+  languageName: node
+  linkType: hard
+
+"@types/google.accounts@npm:^0.0.14":
+  version: 0.0.14
+  resolution: "@types/google.accounts@npm:0.0.14"
+  checksum: 70f8f2e4334df2fff213353530def82ec219ecd49957c0a63aa4612e27e6c94044015d0395d28b47ccc77dbdbb560535b269c8ab722b04e3bc6676fcccceeefb
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.12":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
@@ -3057,6 +3071,8 @@ __metadata:
   resolution: "web-client-react-vite@workspace:."
   dependencies:
     "@tanstack/react-query": "npm:^5.12.2"
+    "@types/gapi": "npm:^0.0.47"
+    "@types/google.accounts": "npm:^0.0.14"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
     "@types/sort-by": "npm:^1"

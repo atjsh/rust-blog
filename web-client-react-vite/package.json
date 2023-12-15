@@ -20,6 +20,8 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
+    "@types/gapi": "^0.0.47",
+    "@types/google.accounts": "^0.0.14",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@types/sort-by": "^1",
