@@ -114,15 +114,10 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::writer::get_posts_by_authed_writer::handler),
         );
 
-    let auth_router = Router::new()
-        .route(
-            "/auth/access-token",
-            post(routers::auth::get_access_token::handler),
-        )
-        .route(
-            "/auth/google",
-            get(routers::auth::get_access_token_with_google_oauth::handler),
-        );
+    let auth_router = Router::new().route(
+        "/auth/access-token",
+        post(routers::auth::get_access_token::handler),
+    );
 
     let app = Router::new()
         .route("/", get(routers::root::get_hello_world::handler))
