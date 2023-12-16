@@ -163,8 +163,8 @@ pub mod get_access_token_by_google_access_token {
     pub async fn handler(
         DatabaseConnection(mut conn): DatabaseConnection,
         jar: SignedCookieJar,
-        Json(body): Json<AuthBody>,
         query: Query<AuthQuery>,
+        Json(body): Json<AuthBody>,
     ) -> Result<Response, StatusCode> {
         let google_user = match get_google_user_from_google_api(body.google_access_token).await {
             Ok(google_user) => google_user,

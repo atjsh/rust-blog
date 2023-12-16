@@ -128,7 +128,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .route(
             "/auth/google",
-            get(routers::auth::get_access_token_by_google_access_token::handler),
+            post(routers::auth::get_access_token_by_google_access_token::handler),
         );
 
     let app = Router::new()
