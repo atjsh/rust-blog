@@ -30,7 +30,7 @@
 		<nav>
 			{#each data.categories as category}
 				<div class="links-container">
-					<div class="description">{category.name} 카테고리의 다른 문서:</div>
+					<div class="description">{category.name} 카테고리:</div>
 					<ul>
 						{#each category.posts as post}
 							<li><a href={`/post/${post.id}`}>{post.title}</a></li>
@@ -114,6 +114,7 @@
 			text-align: right;
 			color: white;
 			font-size: 0.8em;
+			cursor: default;
 		}
 
 		nav {
@@ -131,6 +132,7 @@
 					margin-bottom: 0.5em;
 					text-transform: uppercase;
 					opacity: 0.5;
+					cursor: default;
 				}
 
 				ul {
