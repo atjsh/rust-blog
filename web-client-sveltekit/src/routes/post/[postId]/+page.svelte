@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { getContentTypeLabel } from '../../../lib';
+	import { goto } from '$app/navigation';
 	import { PUBLIC_WEB_URL } from '$env/static/public';
-
+	import { getContentTypeLabel } from '../../../lib';
 	import type { PageServerData } from './$types';
+
+	function onKeyDown(e: KeyboardEvent) {
+		switch (e.keyCode) {
+			case 27:
+				goto('/');
+				break;
+		}
+	}
 
 	export let data: PageServerData;
 	export let webUrl = PUBLIC_WEB_URL;
@@ -83,6 +91,8 @@
 <svelte:head>
 	<title>{data.post.title} | blog.atj.sh</title>
 </svelte:head>
+
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 
 <style lang="scss">
 	article {
