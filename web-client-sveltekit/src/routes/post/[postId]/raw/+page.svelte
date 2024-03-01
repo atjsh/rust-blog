@@ -171,6 +171,10 @@
 					}
 				}
 			}
+
+			.copyright {
+				font-size: 0.8em;
+			}
 		}
 
 		.post-container {
