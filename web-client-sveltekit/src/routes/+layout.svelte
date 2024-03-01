@@ -150,6 +150,7 @@
 		padding-left: 30rem;
 		box-sizing: border-box;
 		flex: 1;
+		width: 100%;
 	}
 
 	.content {

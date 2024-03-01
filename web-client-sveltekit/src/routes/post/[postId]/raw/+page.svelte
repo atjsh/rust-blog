@@ -10,12 +10,12 @@
 
 <article>
 	<div class="post-metadata">
-		<h1><code>{data.post.title} (Raw {getContentTypeLabel(data.post.content_type)})</code></h1>
+		<h1>{data.post.title} (Raw {getContentTypeLabel(data.post.content_type)})</h1>
 		<div class="category-and-date">
-			<div>
+			<div class="category">
 				{data.post.category.name}
 			</div>
-			<div>
+			<div class="date">
 				{new Date(data.post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })}
 			</div>
 		</div>
@@ -91,7 +91,7 @@
 
 <style lang="scss">
 	article {
-		padding: 2em 3em;
+		padding: 2em 2em 6em 2em;
 		max-width: 42rem;
 		display: flex;
 		flex-direction: column;
@@ -109,16 +109,27 @@
 
 			h1 {
 				word-break: break-all;
+				font-family: monospace;
 				word-wrap: break-word;
 				color: #2c5e96;
 				font-size: 2.4em;
 			}
 
 			.category-and-date {
-				display: flex;
-				gap: 0.3em;
 				color: #2c5e96;
 				font-size: 1.3em;
+
+				.category {
+					display: inline-block;
+
+					&::after {
+						content: ',';
+					}
+				}
+
+				.date {
+					display: inline-block;
+				}
 			}
 
 			.links {
@@ -127,6 +138,10 @@
 				.links-title {
 					font-weight: bold;
 					cursor: pointer;
+
+					&:hover {
+						text-decoration: underline;
+					}
 
 					@media screen and (max-width: 800px) {
 						text-decoration: underline;

@@ -12,14 +12,14 @@
 	<div class="post-metadata">
 		<h1>{data.post.title}</h1>
 		<div class="category-and-date">
-			<div>
+			<div class="category">
 				{data.post.category.name}
 			</div>
-			<div>
+			<div class="date">
 				{new Date(data.post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })}
 			</div>
 		</div>
-		<details class="links" open>
+		<details class="links">
 			<summary class="links-title">이 문서에 대한 자세한 정보</summary>
 			<ul>
 				<li>
@@ -86,7 +86,7 @@
 
 <style lang="scss">
 	article {
-		padding: 2em 3em;
+		padding: 2em 2em 6em 2em;
 		max-width: 42rem;
 		display: flex;
 		flex-direction: column;
@@ -94,7 +94,7 @@
 
 		@media screen and (max-width: 800px) {
 			border: none;
-			padding: 1em 1em;
+			padding: 12em 1em 7em 1em;
 		}
 
 		.post-metadata {
@@ -110,10 +110,20 @@
 			}
 
 			.category-and-date {
-				display: flex;
-				gap: 0.3em;
 				color: #2c5e96;
 				font-size: 1.3em;
+
+				.category {
+					display: inline-block;
+
+					&::after {
+						content: ',';
+					}
+				}
+
+				.date {
+					display: inline-block;
+				}
 			}
 
 			.links {
@@ -122,6 +132,10 @@
 				.links-title {
 					font-weight: bold;
 					cursor: pointer;
+
+					&:hover {
+						text-decoration: underline;
+					}
 
 					@media screen and (max-width: 800px) {
 						text-decoration: underline;
@@ -150,6 +164,10 @@
 						}
 					}
 				}
+			}
+
+			.copyright {
+				font-size: 0.8em;
 			}
 		}
 
