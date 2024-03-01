@@ -122,6 +122,10 @@
 				.links-title {
 					font-weight: bold;
 					cursor: pointer;
+
+					@media screen and (max-width: 800px) {
+						text-decoration: underline;
+					}
 				}
 
 				ul {
