@@ -109,7 +109,7 @@
 <style lang="scss">
 	form {
 		margin: 0 auto;
-		padding: 1em;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 2em;
@@ -122,6 +122,7 @@
 
 		input {
 			width: 100%;
+			box-sizing: border-box;
 			font-size: 1em;
 			padding: 0.5em;
 			border-style: solid;

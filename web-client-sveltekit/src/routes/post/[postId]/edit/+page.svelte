@@ -7,20 +7,31 @@
 	export let form: ActionData;
 </script>
 
-<h1>Edit Post '{data.post.title}'</h1>
+<div>
+	<h1>Edit Post '{data.post.title}'</h1>
 
-<PostForm
-	availableCategories={data.categories}
-	defaultPostValues={{
-		categoryId: data.post.category.id,
-		title: data.post.title,
-		private: data.post.private,
-		content: data.post.content,
-		contentType: data.post.content_type
-	}}
-	errorMessage={form?.error}
-/>
+	<PostForm
+		availableCategories={data.categories}
+		defaultPostValues={{
+			categoryId: data.post.category.id,
+			title: data.post.title,
+			private: data.post.private,
+			content: data.post.content,
+			contentType: data.post.content_type
+		}}
+		errorMessage={form?.error}
+	/>
+</div>
 
 <svelte:head>
 	<title>edit {data.post.title} | blog.atj.sh</title>
 </svelte:head>
+
+<style>
+	div {
+		padding: 2em;
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+	}
+</style>

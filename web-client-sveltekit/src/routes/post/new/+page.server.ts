@@ -3,7 +3,9 @@ import { createPost, getCategories, type PostContentType } from '../../../lib';
 import { getAccessTokenFromCookie } from '../../../lib/access-token/utils';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ cookies }) => {
+	getAccessTokenFromCookie(cookies);
+
 	const categories = await getCategories();
 
 	return {

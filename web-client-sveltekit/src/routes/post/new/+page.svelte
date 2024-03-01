@@ -7,10 +7,21 @@
 	export let form: ActionData;
 </script>
 
-<h1>New Post</h1>
+<div>
+	<h1>New Post</h1>
 
-<PostForm availableCategories={data.categories} errorMessage={form?.error} />
+	<PostForm availableCategories={data.categories} errorMessage={form?.error} />
+</div>
 
 <svelte:head>
 	<title>New Post | blog.atj.sh</title>
 </svelte:head>
+
+<style>
+	div {
+		padding: 2em;
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+	}
+</style>

@@ -3,7 +3,9 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { getAccessTokenFromCookie } from '../../../../lib/access-token/utils';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, cookies }) => {
+	getAccessTokenFromCookie(cookies);
+
 	const { postId } = params;
 
 	const post = await getPost(Number(postId));
