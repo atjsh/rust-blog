@@ -94,7 +94,7 @@
 
 		@media screen and (max-width: 800px) {
 			border: none;
-			padding: 12em 1em 7em 1em;
+			padding: 1em 1em 7em 1em;
 		}
 
 		.post-metadata {
