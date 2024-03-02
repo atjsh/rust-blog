@@ -92,7 +92,7 @@
 	<title>{data.post.title} | blog.atj.sh</title>
 </svelte:head>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window on:keydown={onKeyDown} />
 
 <style lang="scss">
 	article {
