@@ -127,12 +127,6 @@
 			padding: 0.5em;
 			border-style: solid;
 			border-radius: 0.4em;
-
-			@media (prefers-color-scheme: dark) {
-				background: rgb(var(--theme-bg-color));
-				border-color: rgba(var(--theme-text-color), 0.3);
-				color: rgb(var(--theme-text-color));
-			}
 		}
 
 		input[type='checkbox'] {
@@ -146,7 +140,7 @@
 			position: relative;
 			width: 100%;
 
-			@media (max-width: 768px) {
+			@media (max-width: 1000px) {
 				flex-direction: column;
 				flex-flow: column-reverse;
 			}
@@ -156,7 +150,7 @@
 				display: inline-block;
 				box-sizing: border-box;
 
-				@media (max-width: 768px) {
+				@media (max-width: 1000px) {
 					max-width: unset;
 					width: 100%;
 				}
@@ -170,12 +164,6 @@
 				border: 1px solid #d9d9d9;
 				padding: 1em;
 				overflow: auto;
-
-				@media (prefers-color-scheme: dark) {
-					background: black;
-					color: white;
-					border: 1px solid #303030;
-				}
 			}
 
 			.html-preview {
@@ -186,10 +174,6 @@
 				background: #f5f5f5;
 				overflow: auto;
 				padding: 1em;
-
-				@media (prefers-color-scheme: dark) {
-					background: #303030;
-				}
 			}
 		}
 
