@@ -9,11 +9,19 @@ export const actions: Actions = {
 	default: async ({ request, cookies }) => {
 		const data = await request.formData();
 		const email = data.get('email');
+		const password = data.get('password');
+
+		if (email === null || password === null) {
+			return fail(400, { email, password });
+		}
 
 		let accessToken: string | undefined;
 
 		try {
-			accessToken = await getAccessToken({ email: email?.toString() ?? '' });
+			accessToken = await getAccessToken({
+				email: email.toString(),
+				password: password.toString()
+			});
 		} catch (error) {
 			console.error(error);
 

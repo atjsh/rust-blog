@@ -98,6 +98,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             "/writer/:writer_id",
             get(routers::writer::get_writer_by_writer_id::handler),
         )
+        // .route("/writer", post(routers::auth::create_writer::handler))
         .route(
             "/writer/:writer_id/posts",
             get(routers::writer::get_posts_by_writer_id::handler),

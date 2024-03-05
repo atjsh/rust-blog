@@ -1,4 +1,56 @@
+// pub mod create_writer {
+//     use argon2::{
+//         password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
+//         Argon2,
+//     };
+//     use axum::{response::IntoResponse, Json};
+//     use http::StatusCode;
+//     use serde::Deserialize;
+
+//     use crate::extractors::DatabaseConnection;
+
+//     #[derive(Deserialize)]
+//     pub struct Writer {
+//         email: String,
+//         password: String,
+//     }
+
+//     pub async fn handler(
+//         DatabaseConnection(mut conn): DatabaseConnection,
+//         Json(payload): Json<Writer>,
+//     ) -> Result<impl IntoResponse, StatusCode> {
+//         println!("email: {}", payload.email);
+//         println!("password: {}", payload.password);
+
+//         let salt: SaltString = SaltString::generate(&mut OsRng);
+
+//         // Argon2 with default params (Argon2id v19)
+//         let argon2 = Argon2::default();
+
+//         let password_hash = argon2.hash_password(payload.password.as_bytes(), &salt);
+
+//         if password_hash.is_err() {
+//             return Err(StatusCode::BAD_REQUEST);
+//         }
+
+//         let result = sqlx::query!(
+//             "insert into writer (email, password_hashed, description) values ($1, $2, 'TEST') returning id",
+//             payload.email,
+//             password_hash.unwrap().to_string()
+//         )
+//         .fetch_one(&mut *conn)
+//         .await;
+
+//         if result.is_err() {
+//             return Err(StatusCode::BAD_REQUEST);
+//         }
+
+//         Ok(StatusCode::CREATED)
+//     }
+// }
+
 pub mod get_writer_id_from_auth_header {
+
     use axum::{
         headers::{authorization::Bearer, Authorization},
         http::StatusCode,
@@ -42,6 +94,10 @@ pub mod get_writer_id_from_auth_header {
 }
 
 pub mod get_access_token {
+    use argon2::{
+        password_hash::{PasswordHash, PasswordVerifier},
+        Argon2,
+    };
     use axum::{response::IntoResponse, Json};
     use chrono::Utc;
     use http::StatusCode;
@@ -53,10 +109,12 @@ pub mod get_access_token {
     #[derive(serde::Deserialize)]
     pub struct AuthBody {
         email: String,
+        password: String,
     }
 
     struct WriterRow {
         id: i64,
+        password_hashed: String,
     }
 
     #[derive(Debug, Serialize, Deserialize)]
@@ -71,7 +129,7 @@ pub mod get_access_token {
     ) -> Result<impl IntoResponse, StatusCode> {
         let result = sqlx::query_as!(
             WriterRow,
-            "select id from writer where email = $1",
+            "select id, password_hashed from writer where email = $1",
             payload.email
         )
         .fetch_one(&mut *conn)
@@ -82,6 +140,20 @@ pub mod get_access_token {
         };
 
         let writer = result.unwrap();
+
+        let parsed_hash = PasswordHash::new(&writer.password_hashed);
+
+        if parsed_hash.is_err() {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
+
+        let password_passed = Argon2::default()
+            .verify_password(payload.password.as_bytes(), &parsed_hash.unwrap())
+            .is_ok();
+
+        if !password_passed {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
 
         let mut expire_date = Utc::now();
         expire_date += chrono::Duration::days(365);

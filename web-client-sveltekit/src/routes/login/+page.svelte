@@ -7,13 +7,8 @@
 <main>
 	<h1>Login</h1>
 	<form method="post">
-		<input
-			type="email"
-			id="email"
-			name="email"
-			required
-			placeholder="username:password@example.com"
-		/>
+		<input type="email" id="email" name="email" required placeholder="email" />
+		<input type="password" name="password" id="password" required placeholder="password" />
 		<button type="submit">Login</button>
 	</form>
 	{#if form?.incorrect}

@@ -73,6 +73,7 @@ export type GetWriterResponseData = {
 
 export type GetAuthedPayload = {
 	email: string;
+	password: string;
 };
 
 export async function getAccessToken(payload: GetAuthedPayload): Promise<string> {
