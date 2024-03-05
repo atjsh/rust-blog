@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            delete from post\n            where id = $1 and written_by_id = $2\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "435579631c853bd8bc950f1e21f172134cce91e203a515bd52b8ae5a3054315f"
+}

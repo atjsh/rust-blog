@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app-rust-test
+
+  Sample SAM Template for sam-app-rust-test
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Parameters:
+  DatabaseUrl:
+    Type: String
+    Description: "Database URL"
+  JwtSecret:
+    Type: String
+    Description: "JWT Secret"
+  WebClientUrl:
+    Type: String
+    Description: "Web Client URL"
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: rust-cargolambda # More info about Cargo Lambda: https://github.com/cargo-lambda/cargo-lambda
+    Properties:
+      CodeUri: ./ # Points to dir of Cargo.toml
+      Handler: bootstrap # Do not change, as this is the default executable name produced by Cargo Lambda
+      Runtime: provided.al2
+      Architectures:
+        - x86_64
+      Events:
+        HelloWorld:
+          Type: HttpApi # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties: # all method, path
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          DATABASE_URL: !Ref DatabaseUrl
+          JWT_SECRET: !Ref JwtSecret
+          WEB_CLIENT_URL: !Ref WebClientUrl
+
+Outputs:
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn

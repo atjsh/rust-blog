@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE writer\n            SET email = COALESCE($1, email), description = COALESCE($2, description)\n            WHERE id = $3\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a47c5fd687001317fc40b5efa39c3b4939eea18333ce0d4b891cc24e0db908bb"
+}

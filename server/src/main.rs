@@ -9,7 +9,6 @@ use axum::{
     routing::{delete, get, patch, post},
     Router,
 };
-use cookie::Key;
 use http::{
     header::{
         ACCESS_CONTROL_ALLOW_CREDENTIALS, ACCESS_CONTROL_ALLOW_HEADERS,
@@ -24,7 +23,6 @@ use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, FromRef)]
 pub struct AppState {
-    cookie_secret_key: Key,
     pg_pool: sqlx::PgPool,
 }
 
@@ -46,12 +44,7 @@ async fn main() -> Result<(), lambda_http::Error> {
         .await
         .expect("can't connect to database");
 
-    let cookit_secret_key_string = std::env::var(env_values::COOKIE_SECRET).unwrap();
-
-    let state = AppState {
-        cookie_secret_key: Key::from(cookit_secret_key_string.as_bytes()),
-        pg_pool,
-    };
+    let state = AppState { pg_pool };
 
     let cors = CorsLayer::new()
         .allow_methods([
@@ -121,15 +114,10 @@ async fn main() -> Result<(), lambda_http::Error> {
             get(routers::writer::get_posts_by_authed_writer::handler),
         );
 
-    let auth_router = Router::new()
-        .route(
-            "/auth/access-token",
-            post(routers::auth::get_access_token::handler),
-        )
-        .route(
-            "/auth/google",
-            post(routers::auth::get_access_token_by_google_access_token::handler),
-        );
+    let auth_router = Router::new().route(
+        "/auth/access-token",
+        post(routers::auth::get_access_token::handler),
+    );
 
     let app = Router::new()
         .route("/", get(routers::root::get_hello_world::handler))

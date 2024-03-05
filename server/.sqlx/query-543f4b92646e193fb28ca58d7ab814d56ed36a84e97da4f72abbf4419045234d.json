@@ -1,0 +1,32 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, name, created_at from category",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "543f4b92646e193fb28ca58d7ab814d56ed36a84e97da4f72abbf4419045234d"
+}

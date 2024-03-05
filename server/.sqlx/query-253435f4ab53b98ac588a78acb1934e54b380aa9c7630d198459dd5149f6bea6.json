@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.created_at,\n                u.id as \"written_by_id!\",\n                u.email as \"written_by_email!\",\n                c.id as \"category_id!\",\n                c.name as \"category_name!\"\n            from post p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            where p.id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "content_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "private",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      },
+      {
+        "ordinal": 6,
+        "name": "written_by_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "written_by_email!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "category_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "category_name!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "253435f4ab53b98ac588a78acb1934e54b380aa9c7630d198459dd5149f6bea6"
+}

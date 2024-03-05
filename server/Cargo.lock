@@ -177,28 +177,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-extra"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ab90e7b70bea63a153137162affb6a0bce26b584c24a4c7885509783e2cf30b"
-dependencies = [
- "axum",
- "axum-core",
- "bytes",
- "cookie",
- "futures-util",
- "http",
- "http-body",
- "mime",
- "pin-project-lite",
- "serde",
- "tokio",
- "tower",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
 name = "axum-macros"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -317,22 +295,6 @@ name = "const-oid"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28c122c3980598d243d63d9a704629a2d748d101f278052ff068be5a4423ab6f"
-
-[[package]]
-name = "cookie"
-version = "0.17.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7efb37c3e1ccb1ff97164ad95ac1606e8ccd35b3fa0a7d99a304c7f4a428cc24"
-dependencies = [
- "base64",
- "hmac",
- "percent-encoding",
- "rand",
- "sha2",
- "subtle",
- "time",
- "version_check",
-]
 
 [[package]]
 name = "core-foundation"
@@ -1263,9 +1225,9 @@ checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
 
 [[package]]
 name = "openssl"
-version = "0.10.61"
+version = "0.10.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b8419dc8cc6d866deb801274bba2e6f8f6108c1bb7fcc10ee5ab864931dbb45"
+checksum = "95a0481286a310808298130d22dd1fef0fa571e05a8f44ec801801e84b216b1f"
 dependencies = [
  "bitflags 2.4.0",
  "cfg-if",
@@ -1294,13 +1256,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ff011a302c396a5197692431fc1948019154afc178baf7d8e37367442a4601cf"
 
 [[package]]
-name = "openssl-sys"
-version = "0.9.97"
+name = "openssl-src"
+version = "300.2.3+3.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3eaad34cdd97d81de97964fc7f29e2d104f483840d906ef56daa1912338460b"
+checksum = "5cff92b6f71555b61bb9315f7c64da3ca43d87531622120fea0195fc761b4843"
+dependencies = [
+ "cc",
+]
+
+[[package]]
+name = "openssl-sys"
+version = "0.9.101"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dda2b0f344e78efc2facf7d195d098df0dd72151b26ab98da807afc26c198dff"
 dependencies = [
  "cc",
  "libc",
+ "openssl-src",
  "pkg-config",
  "vcpkg",
 ]
@@ -1798,13 +1770,12 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "axum",
- "axum-extra",
  "axum-macros",
  "chrono",
- "cookie",
  "http",
  "jsonwebtoken",
  "lambda_http",
+ "openssl",
  "reqwest",
  "serde",
  "serde_json",

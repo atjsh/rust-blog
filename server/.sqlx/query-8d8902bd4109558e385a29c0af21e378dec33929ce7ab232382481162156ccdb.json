@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT post.id, post.title, post.private, post.created_at, post.written_by_id, writer.email AS written_by_email, post.category_id, category.name AS category_name\n            FROM post\n            INNER JOIN writer ON post.written_by_id = writer.id\n            INNER JOIN category ON post.category_id = category.id\n            WHERE post.written_by_id = $1\n            AND post.private = false\n            order by post.created_at desc\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "private",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 3,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      },
+      {
+        "ordinal": 4,
+        "name": "written_by_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "written_by_email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "category_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "category_name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "8d8902bd4109558e385a29c0af21e378dec33929ce7ab232382481162156ccdb"
+}

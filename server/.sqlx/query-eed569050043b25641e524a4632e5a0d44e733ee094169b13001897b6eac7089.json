@@ -1,0 +1,81 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            with inserted as (\n                insert into post (title, content, content_type, private, written_by_id, category_id)\n                values ($1, $2, $3, $4, $5, $6)\n                returning *\n            )\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.created_at,\n                u.id as \"written_by_id\",\n                u.email as \"written_by_email\",\n                c.id as \"category_id\",\n                c.name as \"category_name\"\n            from inserted p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "content_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "private",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      },
+      {
+        "ordinal": 6,
+        "name": "written_by_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "written_by_email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "category_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "category_name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Bool",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "eed569050043b25641e524a4632e5a0d44e733ee094169b13001897b6eac7089"
+}
