@@ -4,8 +4,8 @@
 	export let form: ActionData;
 </script>
 
-<main>
-	<h1>Login</h1>
+<div>
+	<h1>WebMaster Login</h1>
 	<form method="post">
 		<input type="email" id="email" name="email" required placeholder="email" />
 		<input type="password" name="password" id="password" required placeholder="password" />
@@ -14,14 +14,37 @@
 	{#if form?.incorrect}
 		<p style="color: red">⚠️ Failed to login</p>
 	{/if}
-</main>
+</div>
 
 <svelte:head>
-	<title>Login | blog.atj.sh</title>
+	<title>WebMaster Login | blog.atj.sh</title>
 </svelte:head>
 
-<style>
+<style lang="scss">
 	input {
 		width: 15rem;
+	}
+
+	div {
+		display: flex;
+		flex-direction: column;
+		padding: 2em;
+		gap: 2em;
+
+		h1 {
+			color: #2c5e96;
+		}
+
+		form {
+			display: flex;
+			flex-direction: column;
+			gap: 0.4em;
+
+			button {
+				margin-top: 1em;
+				width: 15rem;
+				padding: 0.5em;
+			}
+		}
 	}
 </style>

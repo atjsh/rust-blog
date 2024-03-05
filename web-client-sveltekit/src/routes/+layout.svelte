@@ -47,6 +47,13 @@
 						<li><a href="/post/new">New Post</a></li>
 					</ul>
 				</div>
+			{:else}
+				<div class="links-container">
+					<div class="description">PB Administration:</div>
+					<ul>
+						<li><a href="/login">WebMaster Login</a></li>
+					</ul>
+				</div>
 			{/if}
 		</nav>
 	</aside>
