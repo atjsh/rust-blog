@@ -40,7 +40,7 @@
 			{/each}
 			{#if data.authed}
 				<div class="links-container">
-					<div class="description">관리자:</div>
+					<div class="description">PB Administration:</div>
 					<ul>
 						<li><a href="/profile">Profile</a></li>
 						<li><a href="/logout" data-sveltekit-preload-data="tap">Logout</a></li>
