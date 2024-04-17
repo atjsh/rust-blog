@@ -108,7 +108,9 @@
 		background-repeat: repeat;
 		width: 30rem;
 		min-height: 100vh;
+		max-height: 100vh;
 		box-sizing: border-box;
+		overflow-y: auto;
 
 		.ribbon {
 			width: 30rem;
@@ -122,10 +124,11 @@
 			color: white;
 			font-size: 0.8em;
 			cursor: default;
+			position: fixed;
 		}
 
 		nav {
-			margin-top: -2rem;
+			margin-top: 0rem;
 			padding: 2em;
 			padding-left: calc(2em + 2rem);
 			width: 100%;
