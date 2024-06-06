@@ -24,6 +24,10 @@
 	export let data: LayoutServerData;
 </script>
 
+<svelte:head>
+	<title>blog.atj.sh</title>
+</svelte:head>
+
 <div class={`content ${isAsideShown ? 'aside-show' : ''}`}>
 	<aside>
 		<div class="ribbon">Personal Blog from atjsh (전성훈)</div>
