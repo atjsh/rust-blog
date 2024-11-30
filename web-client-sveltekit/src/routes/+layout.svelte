@@ -32,6 +32,14 @@
 	<aside>
 		<div class="ribbon">Personal Blog from atjsh (전성훈)</div>
 		<nav>
+			<div class="links-container">
+				<div class="description">작성자</div>
+				<ul>
+					<li>
+						<a href="https://atj.sh">전성훈</a>
+					</li>
+				</ul>
+			</div>
 			{#each data.categories as category}
 				<div class="links-container">
 					<div class="description">{category.name} 카테고리:</div>
