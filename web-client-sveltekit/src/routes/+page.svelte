@@ -1,5 +1,9 @@
 <div />
 
+<svelte:head>
+	<title>Personal Blog from atjsh</title>
+</svelte:head>
+
 <style>
 	div {
 		background-color: #b6b6b6;
