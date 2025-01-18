@@ -12,5 +12,9 @@
 		background-size: 4em;
 		height: 100vh;
 		width: 100%;
+
+		@media (prefers-color-scheme: dark) {
+			background-color: #0a0a0a;
+		}
 	}
 </style>

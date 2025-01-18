@@ -145,6 +145,11 @@
 				flex-flow: column-reverse;
 			}
 
+			@media (prefers-color-scheme: dark) {
+				background: white;
+				color: black;
+			}
+
 			:global(.content-editor-item) {
 				max-width: 50%;
 				display: inline-block;

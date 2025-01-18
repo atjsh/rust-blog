@@ -78,9 +78,27 @@
 {/if}
 
 <style lang="scss">
+	:root {
+		--theme-bg-color: 255, 255, 255;
+		--theme-text-color: 0, 0, 0;
+		color-scheme: light dark;
+
+		@media (prefers-color-scheme: dark) {
+			--theme-bg-color: 15, 15, 15;
+			--theme-text-color: 255, 255, 255;
+		}
+
+		@media screen and (max-width: 800px) and (prefers-color-scheme: dark) {
+			--theme-bg-color: 0, 0, 0;
+		}
+	}
+
 	:global(body) {
 		font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue,
 			helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+
+		background-color: rgb(var(--theme-bg-color));
+		color: rgb(var(--theme-text-color));
 	}
 
 	:global(*) {
@@ -119,6 +137,11 @@
 		height: 100dvh;
 		box-sizing: border-box;
 		overflow-y: auto;
+
+		@media (prefers-color-scheme: dark) {
+			background-color: #000000;
+			background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><text x="150" y="210" text-anchor="middle" transform="rotate(45 150 150)" font-size="180" font-family="sans-serif" fill="white" fill-opacity="0.08">PB</text></svg>');
+		}
 
 		.ribbon {
 			width: 30rem;
