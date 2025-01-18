@@ -14,7 +14,7 @@
 </div>
 
 <svelte:head>
-	<title>New Post| Personal Blog from atjsh</title>
+	<title>New Post | Personal Blog from atjsh</title>
 </svelte:head>
 
 <style>

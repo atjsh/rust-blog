@@ -15,5 +15,5 @@
 <WriterPosts posts={data.posts} />
 
 <svelte:head>
-	<title>Writer {data.writer.email}| Personal Blog from atjsh</title>
+	<title>Writer {data.writer.email} | Personal Blog from atjsh</title>
 </svelte:head>
