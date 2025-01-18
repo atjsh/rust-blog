@@ -12,5 +12,5 @@
 </form>
 
 <svelte:head>
-	<title>delete {data.post.title} | blog.atj.sh</title>
+	<title>delete {data.post.title}| Personal Blog from atjsh</title>
 </svelte:head>

@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>blog.atj.sh</title>
+	<title>Personal Blog from atjsh</title>
 </svelte:head>
 
 <div class={`content ${isAsideShown ? 'aside-show' : ''}`}>

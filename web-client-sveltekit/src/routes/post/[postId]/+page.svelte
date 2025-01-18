@@ -89,7 +89,8 @@
 </article>
 
 <svelte:head>
-	<title>{data.post.title} | blog.atj.sh</title>
+	<title>{data.post.title}| Personal Blog from atjsh</title>
+	<link rel="canonical" href={`${webUrl}/post/${data.post.id}`} />
 </svelte:head>
 
 <svelte:window on:keydown={onKeyDown} />

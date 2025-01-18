@@ -86,7 +86,8 @@
 </article>
 
 <svelte:head>
-	<title>{data.post.title} (raw) | blog.atj.sh</title>
+	<title>{data.post.title} (raw)| Personal Blog from atjsh</title>
+	<link rel="canonical" href={`${webUrl}/post/${data.post.id}`} />
 </svelte:head>
 
 <style lang="scss">

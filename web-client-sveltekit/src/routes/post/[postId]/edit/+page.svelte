@@ -24,7 +24,7 @@
 </div>
 
 <svelte:head>
-	<title>edit {data.post.title} | blog.atj.sh</title>
+	<title>edit {data.post.title}| Personal Blog from atjsh</title>
 </svelte:head>
 
 <style>

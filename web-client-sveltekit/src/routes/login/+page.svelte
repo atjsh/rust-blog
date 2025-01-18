@@ -17,7 +17,7 @@
 </div>
 
 <svelte:head>
-	<title>WebMaster Login | blog.atj.sh</title>
+	<title>WebMaster Login| Personal Blog from atjsh</title>
 </svelte:head>
 
 <style lang="scss">
