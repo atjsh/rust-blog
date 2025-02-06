@@ -1,4 +1,4 @@
-<div />
+<div></div>
 
 <svelte:head>
 	<title>Personal Blog from atjsh</title>

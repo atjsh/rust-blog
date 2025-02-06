@@ -1,16 +1,9 @@
-import adapter from '@sveltejs/adapter-auto';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import adapter from '@sveltejs/adapter-cloudflare';
+
 
 /** @type {import('@sveltejs/kit').Config} */
-const config = {
-	preprocess: vitePreprocess(),
-	optimizeDeps: {
-		exclude: ['codemirror']
-	},
-
+export default {
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
 	}
-};
-
-export default config;
+}
