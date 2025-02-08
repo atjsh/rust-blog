@@ -30,7 +30,7 @@ export const GET: RequestHandler = async ({ platform, params, request }) => {
 
 		await platform?.caches?.default.put(
 			request.url,
-			response as unknown as SFResponse // TODO: Fix this type cast
+			response.clone() as unknown as SFResponse // TODO: Fix this type cast
 		);
 
 		return response;
