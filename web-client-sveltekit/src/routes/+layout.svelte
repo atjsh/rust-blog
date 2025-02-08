@@ -35,6 +35,11 @@
 						<a href="https://atj.sh">전성훈</a>
 					</li>
 				</ul>
+				<ul class="go-to-blog-home-ul-container">
+					<li>
+						<a href="/">블로그 홈</a>
+					</li>
+				</ul>
 			</div>
 			{#each data.categories as category}
 				<div class="links-container">
@@ -94,8 +99,20 @@
 	}
 
 	:global(body) {
-		font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue,
-			helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+		font-family:
+			-apple-system,
+			BlinkMacSystemFont,
+			avenir next,
+			avenir,
+			segoe ui,
+			helvetica neue,
+			helvetica,
+			Cantarell,
+			Ubuntu,
+			roboto,
+			noto,
+			arial,
+			sans-serif;
 
 		background-color: rgb(var(--theme-bg-color));
 		color: rgb(var(--theme-text-color));
@@ -181,6 +198,16 @@
 						list-style-position: inside;
 						margin-left: 1em;
 						margin-bottom: 0.3em;
+					}
+				}
+
+				.go-to-blog-home-ul-container {
+					margin-top: 1em;
+
+					@media screen and (max-width: 800px) {
+						& {
+							display: none;
+						}
 					}
 				}
 			}
