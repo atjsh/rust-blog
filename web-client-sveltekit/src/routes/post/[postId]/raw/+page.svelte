@@ -61,7 +61,7 @@
 				</li>
 			</ul>
 		</details>
-		<div class="copyright">Copyright © 2024 atjsh.</div>
+		<div class="copyright">Copyright © 2025 atjsh.</div>
 		{#if data.isWriter}
 			<div>
 				<ul>

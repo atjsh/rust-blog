@@ -62,7 +62,7 @@
 				</li>
 			</ul>
 		</details>
-		<div class="copyright">Copyright © 2024 atjsh.</div>
+		<div class="copyright">Copyright © 2025 atjsh.</div>
 		{#if data.isWriter}
 			<div>
 				<ul>
@@ -192,13 +192,13 @@
 	}
 
 	:global(
-			.post-content h1,
-			.post-content h2,
-			.post-content h3,
-			.post-content h4,
-			.post-content h5,
-			.post-content h6
-		) {
+		.post-content h1,
+		.post-content h2,
+		.post-content h3,
+		.post-content h4,
+		.post-content h5,
+		.post-content h6
+	) {
 		color: #005a9c;
 		font-weight: 600;
 	}
