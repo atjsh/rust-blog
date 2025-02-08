@@ -3,6 +3,7 @@
 	import { markdown } from '@codemirror/lang-markdown';
 	import { micromark } from 'micromark';
 	import CodeMirror from 'svelte-codemirror-editor';
+	import { blobToWebP } from 'webp-converter-browser';
 	import type { PostContentType } from '../api';
 	import { getContentTypeLabel } from './post-utils';
 
@@ -17,6 +18,7 @@
 		id: string;
 		url: string;
 		file: File;
+		size: number;
 		success: typeof FileUploadStatus.UPLOADED;
 	};
 	type FileUploadFailed = {
@@ -57,10 +59,35 @@
 	$: renderedContent =
 		postValues.contentType == 'md' ? micromark(postValues.content) : postValues.content;
 
-	async function createPostAttachment(file: File) {
+	// compress image to webp
+	async function getCompressImageAttachmentFormData(file: File) {
+		const compressImageFile = await blobToWebP(file, { quality: 0.5 });
+		const formData = new FormData();
+		formData.append('attachment', compressImageFile);
+		formData.append('fileExtension', 'webp');
+		return formData;
+	}
+
+	function getDefaultFormData(file: File) {
 		const formData = new FormData();
 		formData.append('attachment', file);
 		formData.append('fileExtension', file.name.split('.').pop() ?? '');
+		return formData;
+	}
+
+	async function getFormData(file: File) {
+		const isCompressableImage = file.type.startsWith('image/');
+
+		if (isCompressableImage) {
+			return await getCompressImageAttachmentFormData(file);
+		}
+
+		return getDefaultFormData(file);
+	}
+
+	async function createPostAttachment(file: File) {
+		const formData = await getFormData(file);
+		const processedFile = formData.get('attachment') as File;
 
 		const result = await fetch('/post-attachments', {
 			method: 'POST',
@@ -74,7 +101,49 @@
 		}
 
 		const resultJson: { id: string; url: string } = await result.json();
-		return resultJson;
+		return {
+			id: resultJson.id,
+			url: resultJson.url,
+			size: processedFile.size
+		};
+	}
+
+	function uploadHandler(e: Event) {
+		const files = (e.target as HTMLInputElement).files;
+		if (!files) return;
+
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const id = Math.random().toString(36).substring(7);
+			fileUploadsQueue.push({ id, file, success: FileUploadStatus.PENDING });
+		}
+
+		for (let i = 0; i < fileUploadsQueue.length; i++) {
+			const fileUpload = fileUploadsQueue[i];
+			if (fileUpload.success != FileUploadStatus.PENDING) continue;
+
+			fileUploadsQueue[i] = { ...fileUpload, success: FileUploadStatus.UPLOADING };
+			fileUploadsQueue = fileUploadsQueue;
+			createPostAttachment(fileUpload.file)
+				.then((result) => {
+					fileUploadsQueue[i] = {
+						...fileUpload,
+						success: FileUploadStatus.UPLOADED,
+						url: result.url,
+						size: result.size
+					};
+					fileUploadsQueue = fileUploadsQueue;
+				})
+				.catch((error) => {
+					fileUploadsQueue[i] = {
+						...fileUpload,
+						success: FileUploadStatus.FAILED,
+						failedReason: error.message
+					};
+					fileUploadsQueue = fileUploadsQueue;
+				});
+		}
+		(e.target as HTMLInputElement).value = '';
 	}
 </script>
 
@@ -88,61 +157,12 @@
 			삽입할 수 있습니다.
 		</p>
 
-		<!-- carousel of file upload queue. 
-		 it can have remove button, and shows uploading status by green/yellow/red dot. 
-		 if uploaded, the url is copied to clipboard. 
-		 there are plus button on left. 
-		 when plus button get clicked, it shows file selection window. 
-		 after user select file, the selected item will added to right side of plus button.
-		 file should be uploaded one by one when they added to queue. when user successfully upload file, user can upload another file. -->
 		<div class="file-upload-queue">
-			<input
-				type="file"
-				name="attachment"
-				id="attachment"
-				on:change={(e) => {
-					const files = (e.target as HTMLInputElement).files;
-					if (!files) return;
-
-					for (let i = 0; i < files.length; i++) {
-						const file = files[i];
-						const id = Math.random().toString(36).substring(7);
-						fileUploadsQueue.push({ id, file, success: FileUploadStatus.PENDING });
-					}
-
-					for (let i = 0; i < fileUploadsQueue.length; i++) {
-						const fileUpload = fileUploadsQueue[i];
-						if (fileUpload.success != FileUploadStatus.PENDING) continue;
-
-						fileUploadsQueue[i] = { ...fileUpload, success: FileUploadStatus.UPLOADING };
-						fileUploadsQueue = fileUploadsQueue;
-						createPostAttachment(fileUpload.file)
-							.then((result) => {
-								fileUploadsQueue[i] = {
-									...fileUpload,
-									success: FileUploadStatus.UPLOADED,
-									url: result.url
-								};
-								fileUploadsQueue = fileUploadsQueue;
-							})
-							.catch((error) => {
-								fileUploadsQueue[i] = {
-									...fileUpload,
-									success: FileUploadStatus.FAILED,
-									failedReason: error.message
-								};
-								fileUploadsQueue = fileUploadsQueue;
-							});
-					}
-					(e.target as HTMLInputElement).value = '';
-				}}
-			/>
 			{#each fileUploadsQueue as fileUpload}
 				<div class="file-upload-item">
 					{#if fileUpload.success == FileUploadStatus.PENDING}
 						<div class="file-upload-item-pending">
 							<span class="file-emoji">🕒</span>
-							{fileUpload.file.name}
 							<button
 								on:click={() => {
 									fileUploadsQueue = fileUploadsQueue.filter((file) => file.id != fileUpload.id);
@@ -154,8 +174,6 @@
 					{:else if fileUpload.success == FileUploadStatus.UPLOADING}
 						<div class="file-upload-item-uploading">
 							<span class="file-emoji">⏳</span>
-							{fileUpload.file.name}
-							<div class="uploading-status"></div>
 						</div>
 					{:else if fileUpload.success == FileUploadStatus.UPLOADED}
 						<div class="file-upload-item-uploaded">
@@ -164,13 +182,14 @@
 							{:else}
 								<span class="file-emoji">✅</span>
 							{/if}
-							{fileUpload.file.name}
+							{(fileUpload.size / 1024 / 1024).toFixed(2)}MB
 							<button
 								on:click={() => {
 									navigator.clipboard.writeText(fileUpload.url);
 								}}
+								class="copy-url"
 							>
-								복사
+								주소 복사
 							</button>
 						</div>
 					{:else if fileUpload.success == FileUploadStatus.FAILED}
@@ -188,6 +207,14 @@
 					{/if}
 				</div>
 			{/each}
+			<input
+				type="file"
+				name="attachment"
+				id="attachment"
+				on:change={uploadHandler}
+				class="upload-file-input"
+			/>
+			<label for="attachment" class="file-upload-item-submit">파일 선택</label>
 		</div>
 	</div>
 </div>
@@ -278,6 +305,14 @@
 		gap: 2em;
 		box-sizing: border-box;
 
+		h2 {
+			margin: 0.3em 0;
+		}
+
+		p {
+			margin: 0.4em 0;
+		}
+
 		select {
 			font-size: 1em;
 			padding: 0.3em;
@@ -367,29 +402,72 @@
 			}
 		}
 
-		.file-upload-item-pending,
-		.file-upload-item-uploading,
-		.file-upload-item-uploaded,
-		.file-upload-item-failed {
+		.file-upload-queue {
 			display: flex;
-			align-items: center;
+			flex-direction: row;
 			gap: 0.5em;
-		}
+			max-width: 100%;
+			flex-flow: wrap;
 
-		.file-upload-item-uploaded {
-			flex-direction: column;
-			align-items: flex-start;
-
-			.thumbnail {
-				margin-top: 0.5em;
-				max-width: 100px;
-				max-height: 100px;
-				border: 1px solid #d9d9d9;
-				border-radius: 0.5em;
+			.upload-file-input {
+				display: none;
 			}
 
-			.file-emoji {
-				font-size: 2em;
+			.file-upload-item-submit,
+			.file-upload-item-pending,
+			.file-upload-item-uploading,
+			.file-upload-item-failed,
+			.file-upload-item-uploaded {
+				flex-direction: column;
+				align-items: center;
+				display: flex;
+				padding: 0.5em;
+				box-sizing: border-box;
+				align-items: center;
+				width: 10rem;
+				height: 10rem;
+				justify-content: center;
+
+				.copy-url {
+					margin-top: 0.5em;
+					font-size: 0.8em;
+					background-color: rgb(var(--theme-text-color));
+					color: rgb(var(--theme-bg-color));
+					border: unset;
+					border-radius: 10em;
+					padding: 0.8em 1.5em;
+					opacity: 1;
+					cursor: pointer;
+					transition: opacity 0.15s ease;
+
+					&:hover {
+						opacity: 0.8;
+					}
+				}
+
+				.thumbnail {
+					width: 100%;
+					height: 70%;
+					object-fit: contain;
+				}
+
+				.file-emoji {
+					font-size: 2em;
+				}
+			}
+
+			.file-upload-item-submit {
+				border: #0080ff;
+				border-style: dashed;
+				border-width: 2px;
+				color: #0080ff;
+				cursor: pointer;
+				transition: background 0.15s ease;
+				border-radius: 0.5em;
+
+				&:hover {
+					background: #4aa4ff;
+				}
 			}
 		}
 	}

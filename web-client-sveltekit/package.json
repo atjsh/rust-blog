@@ -46,6 +46,7 @@
 		"reset-css": "^5.0.2",
 		"return-fetch": "^0.4.5",
 		"svelte-codemirror-editor": "^1.1.0",
-		"svelte-persisted-store": "^0.7.0"
+		"svelte-persisted-store": "^0.7.0",
+		"webp-converter-browser": "^1.0.4"
 	}
 }
