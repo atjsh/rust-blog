@@ -76,6 +76,11 @@ export type GetAuthedPayload = {
 	password: string;
 };
 
+export type CreatePostAttachmentResponseData = {
+	id: number;
+	created_at: string;
+};
+
 export async function getAccessToken(payload: GetAuthedPayload): Promise<string> {
 	const response = await serverFetch(`/auth/access-token`, {
 		method: 'POST',
@@ -156,6 +161,39 @@ export async function getPost(postId: number): Promise<GetPostResponseData> {
 	}
 
 	return (await response.json()) as GetPostResponseData;
+}
+
+export async function createPostAttachment(
+	attachment: FormData,
+	accessToken: string
+): Promise<CreatePostAttachmentResponseData> {
+	const response = await serverFetch(`/post-attachment`, {
+		method: 'POST',
+		body: attachment,
+		headers: {
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
+
+	return (await response.json()) as CreatePostAttachmentResponseData;
+}
+
+export async function getPostAttachment(attachmentId: string): Promise<{
+	attachment: Blob;
+	contentDisposition: string;
+}> {
+	const response = await serverFetch(`/post-attachment/${attachmentId}`, {
+		method: 'GET'
+	});
+
+	if (response.status !== 200) {
+		throw Error('Failed to get post attachment');
+	}
+
+	return {
+		attachment: await response.blob(),
+		contentDisposition: response.headers.get('Content-Disposition') || ''
+	};
 }
 
 export async function createPost(

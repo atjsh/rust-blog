@@ -11,14 +11,21 @@ use axum::{
 };
 use http::{
     header::{
-        ACCESS_CONTROL_ALLOW_CREDENTIALS, ACCESS_CONTROL_ALLOW_HEADERS,
+        ACCEPT_ENCODING, ACCESS_CONTROL_ALLOW_CREDENTIALS, ACCESS_CONTROL_ALLOW_HEADERS,
         ACCESS_CONTROL_REQUEST_HEADERS, ACCESS_CONTROL_REQUEST_METHOD, CONTENT_TYPE,
     },
     Method,
 };
+use lambda_http::tower::ServiceBuilder;
 use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
-use tower_http::cors::CorsLayer;
+use tower_http::{
+    compression::CompressionLayer,
+    cors::CorsLayer,
+    decompression::RequestDecompressionLayer,
+    trace::{DefaultOnResponse, TraceLayer},
+};
+use tracing::Level;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, FromRef)]
@@ -61,6 +68,7 @@ async fn main() -> Result<(), lambda_http::Error> {
             ACCESS_CONTROL_REQUEST_HEADERS,
             ACCESS_CONTROL_REQUEST_METHOD,
             CONTENT_TYPE,
+            ACCEPT_ENCODING,
         ])
         .allow_origin(
             std::env::var(env_values::WEB_CLIENT_URL)
@@ -73,34 +81,47 @@ async fn main() -> Result<(), lambda_http::Error> {
     let category_router = Router::new()
         .route("/category", get(routers::category::get_categories::handler))
         .route(
-            "/category/:category_id",
+            "/category/{category_id}",
             get(routers::category::get_category::handler),
         )
         .route(
-            "/category/:category_id/posts",
+            "/category/{category_id}/posts",
             get(routers::category::get_category_posts::handler),
         );
 
-    let post_router: Router<_, _> = Router::new()
+    let post_attachment_router = Router::new()
         .route(
-            "/post/:post_id",
+            "/post-attachment",
+            post(routers::post_attachment::create_post_attachment::handler),
+        )
+        .route(
+            "/post-attachment/{attachment_id}",
+            get(routers::post_attachment::get_post_attachment_by_attachment_id::handler),
+        );
+
+    let post_router = Router::new()
+        .route(
+            "/post/{post_id}",
             get(routers::post::get_post_by_post_id::handler),
         )
-        .route("/post/:post_id", patch(routers::post::update_post::handler))
         .route(
-            "/post/:post_id",
+            "/post/{post_id}",
+            patch(routers::post::update_post::handler),
+        )
+        .route(
+            "/post/{post_id}",
             delete(routers::post::delete_post::handler),
         )
         .route("/post", post(routers::post::create_post::handler));
 
     let writer_router = Router::new()
         .route(
-            "/writer/:writer_id",
+            "/writer/{writer_id}",
             get(routers::writer::get_writer_by_writer_id::handler),
         )
         // .route("/writer", post(routers::auth::create_writer::handler))
         .route(
-            "/writer/:writer_id/posts",
+            "/writer/{writer_id}/posts",
             get(routers::writer::get_posts_by_writer_id::handler),
         );
 
@@ -124,18 +145,26 @@ async fn main() -> Result<(), lambda_http::Error> {
         .route("/", get(routers::root::get_hello_world::handler))
         .merge(category_router)
         .merge(post_router)
+        .merge(post_attachment_router)
         .merge(writer_router)
         .merge(profile_router)
         .merge(auth_router)
-        .layer(cors)
+        .layer(
+            ServiceBuilder::new()
+                .layer(
+                    TraceLayer::new_for_http()
+                        .on_response(DefaultOnResponse::new().level(Level::DEBUG)),
+                )
+                .layer(cors)
+                .layer(RequestDecompressionLayer::new())
+                .layer(CompressionLayer::new()),
+        )
         .with_state(state);
 
     // run as lambda
     lambda_http::run(app).await
 
     // run as axum
-    // axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-    //     .serve(app.into_make_service())
-    //     .await
-    //     .unwrap();
+    // let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    // axum::serve(listener, app).await.unwrap();
 }

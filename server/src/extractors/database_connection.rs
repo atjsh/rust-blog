@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{FromRef, FromRequestParts},
     http::{request::Parts, StatusCode},
 };
@@ -11,7 +10,6 @@ fn internal_error() -> (StatusCode, String) {
 
 pub struct DatabaseConnection(pub sqlx::pool::PoolConnection<sqlx::Postgres>);
 
-#[async_trait]
 impl<S> FromRequestParts<S> for DatabaseConnection
 where
     PgPool: FromRef<S>,

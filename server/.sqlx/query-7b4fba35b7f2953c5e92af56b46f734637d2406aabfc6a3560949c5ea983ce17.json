@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select\n                pa.content,\n                pa.file_extension,\n                pa.mimetype\n            from post_attachment pa\n            where pa.id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "content",
+        "type_info": "Bytea"
+      },
+      {
+        "ordinal": 1,
+        "name": "file_extension",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "mimetype",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "7b4fba35b7f2953c5e92af56b46f734637d2406aabfc6a3560949c5ea983ce17"
+}

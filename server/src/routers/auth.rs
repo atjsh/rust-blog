@@ -51,10 +51,9 @@
 
 pub mod get_writer_id_from_auth_header {
 
-    use axum::{
+    use axum::{http::StatusCode, response::IntoResponse};
+    use axum_extra::{
         headers::{authorization::Bearer, Authorization},
-        http::StatusCode,
-        response::IntoResponse,
         TypedHeader,
     };
     use jsonwebtoken::{decode, DecodingKey, Validation};

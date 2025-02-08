@@ -2,10 +2,12 @@ use crate::env_values;
 
 use super::DatabaseConnection;
 use axum::{
-    async_trait,
-    extract::{FromRef, FromRequestParts, TypedHeader},
-    headers::{authorization::Bearer, Authorization},
+    extract::{FromRef, FromRequestParts},
     http::{request::Parts, StatusCode},
+};
+use axum_extra::{
+    headers::{authorization::Bearer, Authorization},
+    TypedHeader,
 };
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
@@ -33,7 +35,6 @@ struct Claims {
     exp: u64,
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for AuthedWriter
 where
     S: Send + Sync,
