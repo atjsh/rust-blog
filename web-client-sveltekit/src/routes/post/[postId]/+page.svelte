@@ -82,7 +82,11 @@
 	<hr />
 
 	<div class="post-container">
-		<div class="post-content">
+		<div
+			class="post-content"
+			class:md={data.post.content_type === 'md'}
+			class:html={data.post.content_type === 'html'}
+		>
 			{@html data.post.renderedContent}
 		</div>
 	</div>
@@ -261,6 +265,10 @@
 		margin-top: 0;
 		margin-bottom: 1em;
 		line-height: 1.6;
+	}
+
+	:global(.post-content.md img) {
+		max-width: 100%;
 	}
 
 	:global(li) {
