@@ -1,6 +1,10 @@
 # Making a blog web app with SvelteKit and axum
 
-![Screenshot](blog.png)
+[![Screenshot](blog.png)](https://blog.atj.sh)
+
+see it in action: [blog.atj.sh](https://blog.atj.sh)
+
+<hr>
 
 <img src="https://rustacean.net/assets/rustacean-flat-happy.png" width="100px" title="Rustlang logo"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Svelte-kit-horizontal.svg/2560px-Svelte-kit-horizontal.svg.png"  height="100px" title="SvelteKit logo"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Amazon_Lambda_architecture_logo.svg/1200px-Amazon_Lambda_architecture_logo.svg.png" height="100px" title="AWS Lambda logo">
 
