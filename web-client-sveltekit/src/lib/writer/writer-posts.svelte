@@ -21,7 +21,7 @@
 				<div class="title-container">
 					<div class="created-at-and-category">
 						{new Date(post.created_at).toLocaleDateString('ko-KR', { timeZone: 'UTC' })} • {post
-							.category.name} 카테고리
+							.category.name}
 					</div>
 					<div class="title">
 						{post.title}

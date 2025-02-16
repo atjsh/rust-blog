@@ -29,21 +29,15 @@
 		<div class="ribbon">Personal Blog from atjsh (전성훈)</div>
 		<nav>
 			<div class="links-container">
-				<div class="description">작성자</div>
 				<ul>
 					<li>
-						<a href="https://atj.sh">전성훈</a>
-					</li>
-				</ul>
-				<ul class="go-to-blog-home-ul-container">
-					<li>
-						<a href="/">블로그 홈</a>
+						<a href="https://atj.sh">atjsh (전성훈)</a>
 					</li>
 				</ul>
 			</div>
 			{#each data.categories as category}
 				<div class="links-container">
-					<div class="description">{category.name} 카테고리:</div>
+					<div class="description">{category.name}:</div>
 					<ul>
 						{#each category.posts as post}
 							<li><a href={`/post/${post.id}`}>{post.title}</a></li>
