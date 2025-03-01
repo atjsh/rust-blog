@@ -267,6 +267,13 @@
 		line-height: 1.6;
 	}
 
+	:global(.post-content pre) {
+		max-width: 100%;
+		overflow-x: auto;
+		padding-left: 2em;
+		padding-right: 2em;
+	}
+
 	:global(.post-content.md img) {
 		max-width: 100%;
 	}
