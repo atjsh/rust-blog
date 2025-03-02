@@ -1,9 +1,13 @@
 import { COOKIE_SECRET } from '$env/static/private';
-import { getCurrentAuthedWriterId, getPost, type GetPostResponseData } from '$lib';
+import {
+	getCurrentAuthedWriterId,
+	getHTMLFromMarkdown,
+	getPost,
+	type GetPostResponseData
+} from '$lib';
+import { error } from '@sveltejs/kit';
 import CryptoJS from 'crypto-js';
 import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import { micromark } from 'micromark';
 
 export const load: PageServerLoad = async ({ cookies, params }) => {
 	const { postId } = params;
@@ -39,7 +43,7 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
 	return {
 		post: {
 			...post,
-			renderedContent: post.content_type === 'md' ? micromark(post.content) : post.content
+			renderedContent: post.content_type === 'md' ? getHTMLFromMarkdown(post.content) : post.content
 		},
 		isWriter
 	};

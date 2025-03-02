@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { html } from '@codemirror/lang-html';
 	import { markdown } from '@codemirror/lang-markdown';
-	import { micromark } from 'micromark';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { blobToWebP } from 'webp-converter-browser';
 	import type { PostContentType } from '../api';
+	import { getHTMLFromMarkdown } from '../micromark/render';
+	import PostRender from './post-render.svelte';
 	import { getContentTypeLabel } from './post-utils';
 
 	const FileUploadStatus = {
@@ -57,7 +58,7 @@
 	)[] = [];
 
 	$: renderedContent =
-		postValues.contentType == 'md' ? micromark(postValues.content) : postValues.content;
+		postValues.contentType == 'md' ? getHTMLFromMarkdown(postValues.content) : postValues.content;
 
 	// compress image to webp
 	async function getCompressImageAttachmentFormData(file: File) {
@@ -272,7 +273,7 @@
 			/>
 			<input type="hidden" name="content" value={postValues.content} />
 			<div class="html-preview content-editor-item">
-				{@html renderedContent}
+				<PostRender {renderedContent} contentType={postValues.contentType} />
 			</div>
 		</div>
 	</div>
@@ -343,11 +344,6 @@
 				flex-flow: column-reverse;
 			}
 
-			@media (prefers-color-scheme: dark) {
-				background: white;
-				color: black;
-			}
-
 			:global(.content-editor-item) {
 				max-width: 50%;
 				display: inline-block;
@@ -367,6 +363,11 @@
 				border: 1px solid #d9d9d9;
 				padding: 1em;
 				overflow: auto;
+
+				@media (prefers-color-scheme: dark) {
+					background: white;
+					color: black;
+				}
 			}
 
 			.html-preview {
@@ -374,7 +375,6 @@
 				border: unset;
 				border-radius: 0.5em;
 				padding: 0.3em;
-				background: #f5f5f5;
 				overflow: auto;
 				padding: 1em;
 			}
