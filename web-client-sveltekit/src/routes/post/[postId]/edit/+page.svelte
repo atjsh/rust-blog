@@ -17,7 +17,8 @@
 			title: data.post.title,
 			private: data.post.private,
 			content: data.post.content,
-			contentType: data.post.content_type
+			contentType: data.post.content_type,
+			ad: data.post.ad
 		}}
 		errorMessage={form?.error}
 	/>

@@ -3,10 +3,10 @@
 	import { markdown } from '@codemirror/lang-markdown';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { blobToWebP } from 'webp-converter-browser';
-	import type { PostContentType } from '../api';
+	import { PostAd, type PostContentType } from '../api';
 	import { getHTMLFromMarkdown } from '../micromark/render';
-	import PostRender from './post-render.svelte';
-	import { getContentTypeLabel } from './post-utils';
+	import PostRender from './post-renderers/post-render-base.svelte';
+	import { getContentTypeLabel, getPostAdLabel } from './post-utils';
 
 	const FileUploadStatus = {
 		PENDING: 'pending',
@@ -40,6 +40,7 @@
 		private?: boolean;
 		content?: string;
 		contentType?: PostContentType;
+		ad?: PostAd;
 	} = {};
 
 	let postValues = {
@@ -47,7 +48,8 @@
 		title: defaultPostValues.title ?? '',
 		private: defaultPostValues.private ?? true,
 		content: defaultPostValues.content ?? '',
-		contentType: defaultPostValues.contentType ?? 'html'
+		contentType: defaultPostValues.contentType ?? 'html',
+		ad: defaultPostValues.ad ?? PostAd.NoAd
 	};
 
 	let fileUploadsQueue: (
@@ -254,6 +256,18 @@
 		<select name="contentType" id="contentType" bind:value={postValues.contentType}>
 			<option value="html">{getContentTypeLabel('html')}</option>
 			<option value="md">{getContentTypeLabel('md')}</option>
+		</select>
+	</div>
+
+	<div class="form-section">
+		<h2>
+			<label for="ad">게시글 내 광고 게시 여부</label>
+		</h2>
+
+		<select name="ad" id="ad" bind:value={postValues.ad}>
+			{#each Object.values(PostAd) as ad}
+				<option value={ad}>{getPostAdLabel(ad)}</option>
+			{/each}
 		</select>
 	</div>
 

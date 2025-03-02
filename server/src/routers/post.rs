@@ -4,6 +4,19 @@ use serde::{Deserialize, Serialize};
 
 use crate::extractors::{AuthedWriter, DatabaseConnection};
 
+#[derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)]
+#[repr(i16)]
+enum PostAd {
+    NoAd = 0,
+    CoupangAd = 1,
+}
+
+impl From<i16> for PostAd {
+    fn from(value: i16) -> Self {
+        serde_json::from_value(serde_json::json!(value)).unwrap_or(PostAd::NoAd)
+    }
+}
+
 pub mod get_post_by_post_id {
     use super::*;
 
@@ -14,6 +27,7 @@ pub mod get_post_by_post_id {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -31,6 +45,7 @@ pub mod get_post_by_post_id {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -56,8 +71,9 @@ pub mod get_post_by_post_id {
                 id: self.id,
                 title: self.title,
                 content: self.content,
-                private: self.private,
                 content_type: self.content_type,
+                private: self.private,
+                ad: self.ad,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -84,6 +100,7 @@ pub mod get_post_by_post_id {
                 p.content,
                 p.content_type,
                 p.private,
+                p.ad,
                 p.created_at,
                 u.id as "written_by_id!",
                 u.email as "written_by_email!",
@@ -117,6 +134,7 @@ pub mod create_post {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -134,6 +152,7 @@ pub mod create_post {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -161,6 +180,7 @@ pub mod create_post {
                 content: self.content,
                 content_type: self.content_type,
                 private: self.private,
+                ad: self.ad,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -180,6 +200,7 @@ pub mod create_post {
         content: String,
         content_type: String,
         is_private: bool,
+        ad: i16,
         category_id: i32,
     }
 
@@ -198,8 +219,8 @@ pub mod create_post {
             GetPostByPostIdRow,
             r#"
             with inserted as (
-                insert into post (title, content, content_type, private, written_by_id, category_id)
-                values ($1, $2, $3, $4, $5, $6)
+                insert into post (title, content, content_type, private, ad, written_by_id, category_id)
+                values ($1, $2, $3, $4, $5, $6, $7)
                 returning *
             )
             select
@@ -208,6 +229,7 @@ pub mod create_post {
                 p.content,
                 p.content_type,
                 p.private,
+                p.ad,
                 p.created_at,
                 u.id as "written_by_id",
                 u.email as "written_by_email",
@@ -221,6 +243,7 @@ pub mod create_post {
             payload.content,
             payload.content_type,
             payload.is_private,
+            payload.ad,
             writer_id,
             payload.category_id
         )
@@ -244,6 +267,7 @@ pub mod update_post {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by_id: i64,
@@ -261,6 +285,7 @@ pub mod update_post {
         content: String,
         content_type: String,
         private: bool,
+        ad: PostAd,
         created_at: NaiveDateTime,
 
         written_by: GetPostByPostIdResponseWrittenBy,
@@ -288,6 +313,7 @@ pub mod update_post {
                 content: self.content,
                 content_type: self.content_type,
                 private: self.private,
+                ad: self.ad,
                 created_at: self.created_at,
                 written_by: GetPostByPostIdResponseWrittenBy {
                     id: self.written_by_id,
@@ -307,6 +333,7 @@ pub mod update_post {
         content: String,
         content_type: String,
         is_private: bool,
+        ad: i16,
         category_id: i32,
     }
 
@@ -327,8 +354,8 @@ pub mod update_post {
             r#"
             with updated as (
                 update post
-                set title = $1, content = $2, content_type = $3, private = $4, category_id = $5
-                where id = $6 and written_by_id = $7
+                set title = $3, content = $4, content_type = $5, private = $6, category_id = $7, ad = $8
+                where id = $1 and written_by_id = $2
                 returning *
             )
             select
@@ -337,6 +364,7 @@ pub mod update_post {
                 p.content,
                 p.content_type,
                 p.private,
+                p.ad,
                 p.created_at,
                 u.id as "written_by_id",
                 u.email as "written_by_email",
@@ -346,13 +374,14 @@ pub mod update_post {
             inner join writer u on u.id = p.written_by_id
             inner join category c on c.id = p.category_id
             "#,
+            post_id,
+            writer_id,
             payload.title,
             payload.content,
             payload.content_type,
             payload.is_private,
             payload.category_id,
-            post_id,
-            writer_id
+            payload.ad
         )
         .fetch_one(&mut *conn)
         .await

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { PUBLIC_WEB_URL } from '$env/static/public';
 	import { getContentTypeLabel } from '../../../lib';
-	import PostRender from '../../../lib/post/post-render.svelte';
+	import PostContainer from '../../../lib/post/post-container.svelte';
 	import type { PageServerData } from './$types';
 
 	function onKeyDown(e: KeyboardEvent) {
@@ -63,7 +63,7 @@
 				</li>
 			</ul>
 		</details>
-		<div class="copyright">Copyright © 2025 atjsh.</div>
+		<div class="copyright">Copyright © 2025 atjsh (전성훈) All Rights Reserved.</div>
 		{#if data.isWriter}
 			<div>
 				<ul>
@@ -80,9 +80,11 @@
 		{/if}
 	</div>
 
-	<hr />
-
-	<PostRender renderedContent={data.post.renderedContent} contentType={data.post.content_type} />
+	<PostContainer
+		renderedContent={data.post.renderedContent}
+		contentType={data.post.content_type}
+		ad={data.post.ad}
+	/>
 </article>
 
 <svelte:head>
@@ -98,7 +100,7 @@
 		max-width: 42rem;
 		display: flex;
 		flex-direction: column;
-		gap: 2em;
+		gap: 1em;
 
 		@media screen and (max-width: 800px) {
 			border: none;

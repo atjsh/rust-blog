@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            with updated as (\n                update post\n                set title = $1, content = $2, content_type = $3, private = $4, category_id = $5\n                where id = $6 and written_by_id = $7\n                returning *\n            )\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.created_at,\n                u.id as \"written_by_id\",\n                u.email as \"written_by_email\",\n                c.id as \"category_id\",\n                c.name as \"category_name\"\n            from updated p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            ",
+  "query": "\n            with updated as (\n                update post\n                set title = $3, content = $4, content_type = $5, private = $6, category_id = $7, ad = $8\n                where id = $1 and written_by_id = $2\n                returning *\n            )\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.ad,\n                p.created_at,\n                u.id as \"written_by_id\",\n                u.email as \"written_by_email\",\n                c.id as \"category_id\",\n                c.name as \"category_name\"\n            from updated p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            ",
   "describe": {
     "columns": [
       {
@@ -30,39 +30,45 @@
       },
       {
         "ordinal": 5,
+        "name": "ad",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 6,
         "name": "created_at",
         "type_info": "Timestamp"
       },
       {
-        "ordinal": 6,
+        "ordinal": 7,
         "name": "written_by_id",
         "type_info": "Int4"
       },
       {
-        "ordinal": 7,
+        "ordinal": 8,
         "name": "written_by_email",
         "type_info": "Text"
       },
       {
-        "ordinal": 8,
+        "ordinal": 9,
         "name": "category_id",
         "type_info": "Int4"
       },
       {
-        "ordinal": 9,
+        "ordinal": 10,
         "name": "category_name",
         "type_info": "Varchar"
       }
     ],
     "parameters": {
       "Left": [
+        "Int4",
+        "Int4",
         "Text",
         "Text",
         "Text",
         "Bool",
         "Int4",
-        "Int4",
-        "Int4"
+        "Int2"
       ]
     },
     "nullable": [
@@ -75,8 +81,9 @@
       false,
       false,
       false,
+      false,
       false
     ]
   },
-  "hash": "c29974e1addc4f7451318aff5d39b0097dde5e901c17c1ed5edb1b48435e0648"
+  "hash": "3fc6b72ee845fb70fe5c942064ba36a9c6227303665cc20733b928fe06804f35"
 }

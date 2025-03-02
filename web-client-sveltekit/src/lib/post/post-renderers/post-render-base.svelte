@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PostContentType } from '../api';
+	import type { PostContentType } from '../../api';
 
 	export let renderedContent: string;
 	export let contentType: PostContentType;

@@ -1,4 +1,4 @@
-import { getCategories, getPost, updatePost, type PostContentType } from '$lib';
+import { getCategories, getPost, isPostAd, updatePost, type PostContentType } from '$lib';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { getAccessTokenFromCookie } from '../../../../lib/access-token/utils';
 import type { PageServerLoad } from './$types';
@@ -33,10 +33,17 @@ export const actions: Actions = {
 		const isPrivate = data.get('isPrivate');
 		const categoryId = data.get('categoryId');
 		const contentType = data.get('contentType');
+		const ad = Number(data.get('ad'));
 
 		if (!categoryId || !title || !content || !contentType) {
 			return fail(400, {
 				error: 'categoryId, title, content are required'
+			});
+		}
+
+		if (!isPostAd(ad)) {
+			return fail(400, {
+				error: 'ad is invalid'
 			});
 		}
 
@@ -49,6 +56,7 @@ export const actions: Actions = {
 			content.toString(),
 			contentType.toString() as PostContentType,
 			isPrivate === 'on',
+			ad,
 			accessToken
 		);
 

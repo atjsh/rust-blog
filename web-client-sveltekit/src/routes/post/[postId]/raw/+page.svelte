@@ -61,7 +61,7 @@
 				</li>
 			</ul>
 		</details>
-		<div class="copyright">Copyright © 2025 atjsh.</div>
+		<div class="copyright">Copyright © 2025 atjsh (전성훈) All Rights Reserved.</div>
 		{#if data.isWriter}
 			<div>
 				<ul>
@@ -96,7 +96,7 @@
 		max-width: 42rem;
 		display: flex;
 		flex-direction: column;
-		gap: 2em;
+		gap: 1em;
 
 		@media screen and (max-width: 800px) {
 			border: none;

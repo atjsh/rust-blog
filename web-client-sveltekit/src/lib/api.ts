@@ -3,6 +3,16 @@ import returnFetch from 'return-fetch';
 
 export type PostContentType = 'html' | 'md';
 
+export const PostAd = {
+	NoAd: 0,
+	CoupangAd: 1
+} as const;
+export type PostAd = (typeof PostAd)[keyof typeof PostAd];
+
+export function isPostAd(value: unknown): value is PostAd {
+	return typeof value === 'number' && Object.values(PostAd).map(Number).includes(value);
+}
+
 const serverFetch = returnFetch({
 	baseUrl: PUBLIC_SERVER_URL
 });
@@ -36,6 +46,7 @@ export type GetPostResponseData = {
 	content: string;
 	content_type: PostContentType;
 	private: boolean;
+	ad: PostAd;
 	created_at: string;
 
 	written_by: {
@@ -202,6 +213,7 @@ export async function createPost(
 	content: string,
 	contentType: PostContentType,
 	isPrivate: boolean,
+	ad: PostAd,
 	accessToken: string
 ): Promise<GetPostResponseData> {
 	return (await (
@@ -212,6 +224,7 @@ export async function createPost(
 				content,
 				content_type: contentType,
 				is_private: isPrivate,
+				ad,
 				category_id: categoryId
 			}),
 			headers: {
@@ -229,6 +242,7 @@ export async function updatePost(
 	content: string,
 	contenyType: PostContentType,
 	isPrivate: boolean,
+	ad: PostAd,
 	accessToken: string
 ): Promise<GetPostResponseData> {
 	const response = await serverFetch(`/post/${postId}`, {
@@ -238,7 +252,8 @@ export async function updatePost(
 			content,
 			content_type: contenyType,
 			is_private: isPrivate,
-			category_id: categoryId
+			category_id: categoryId,
+			ad
 		}),
 		headers: {
 			Authorization: `Bearer ${accessToken}`,

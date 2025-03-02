@@ -1,7 +1,6 @@
 <script lang="ts">
+	import { navigating, page } from '$app/stores';
 	import type { LayoutServerData } from './$types';
-	import { navigating } from '$app/stores';
-	import { page } from '$app/stores';
 
 	export let isAsideShown = false;
 	export let isFloatingButtonShown = true;
@@ -192,16 +191,6 @@
 						list-style-position: inside;
 						margin-left: 1em;
 						margin-bottom: 0.3em;
-					}
-				}
-
-				.go-to-blog-home-ul-container {
-					margin-top: 1em;
-
-					@media screen and (max-width: 800px) {
-						& {
-							display: none;
-						}
 					}
 				}
 			}

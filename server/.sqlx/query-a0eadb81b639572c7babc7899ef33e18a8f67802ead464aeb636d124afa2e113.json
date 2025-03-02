@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            with inserted as (\n                insert into post (title, content, content_type, private, written_by_id, category_id)\n                values ($1, $2, $3, $4, $5, $6)\n                returning *\n            )\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.created_at,\n                u.id as \"written_by_id\",\n                u.email as \"written_by_email\",\n                c.id as \"category_id\",\n                c.name as \"category_name\"\n            from inserted p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            ",
+  "query": "\n            with inserted as (\n                insert into post (title, content, content_type, private, ad, written_by_id, category_id)\n                values ($1, $2, $3, $4, $5, $6, $7)\n                returning *\n            )\n            select\n                p.id,\n                p.title,\n                p.content,\n                p.content_type,\n                p.private,\n                p.ad,\n                p.created_at,\n                u.id as \"written_by_id\",\n                u.email as \"written_by_email\",\n                c.id as \"category_id\",\n                c.name as \"category_name\"\n            from inserted p\n            inner join writer u on u.id = p.written_by_id\n            inner join category c on c.id = p.category_id\n            ",
   "describe": {
     "columns": [
       {
@@ -30,26 +30,31 @@
       },
       {
         "ordinal": 5,
+        "name": "ad",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 6,
         "name": "created_at",
         "type_info": "Timestamp"
       },
       {
-        "ordinal": 6,
+        "ordinal": 7,
         "name": "written_by_id",
         "type_info": "Int4"
       },
       {
-        "ordinal": 7,
+        "ordinal": 8,
         "name": "written_by_email",
         "type_info": "Text"
       },
       {
-        "ordinal": 8,
+        "ordinal": 9,
         "name": "category_id",
         "type_info": "Int4"
       },
       {
-        "ordinal": 9,
+        "ordinal": 10,
         "name": "category_name",
         "type_info": "Varchar"
       }
@@ -60,6 +65,7 @@
         "Text",
         "Text",
         "Bool",
+        "Int2",
         "Int4",
         "Int4"
       ]
@@ -74,8 +80,9 @@
       false,
       false,
       false,
+      false,
       false
     ]
   },
-  "hash": "eed569050043b25641e524a4632e5a0d44e733ee094169b13001897b6eac7089"
+  "hash": "a0eadb81b639572c7babc7899ef33e18a8f67802ead464aeb636d124afa2e113"
 }
