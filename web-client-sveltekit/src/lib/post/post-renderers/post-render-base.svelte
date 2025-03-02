@@ -121,6 +121,11 @@
 		width: 100%;
 	}
 
+	:global(.post-content img.full-unrounded) {
+		width: 100%;
+		border-radius: 0;
+	}
+
 	:global(.post-content img.center) {
 		display: block;
 		margin-left: auto;
