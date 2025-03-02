@@ -99,6 +99,10 @@
 		padding-right: 2em;
 	}
 
+	:global(.post-content img) {
+		border-radius: 0.5em;
+	}
+
 	:global(.post-content.md img) {
 		max-width: 100%;
 	}
@@ -110,6 +114,7 @@
 
 	:global(.post-content img.half) {
 		width: 50%;
+		border-radius: 0.25em;
 	}
 
 	:global(.post-content img.full) {
@@ -124,9 +129,11 @@
 
 	:global(.post-content img.size-2-3) {
 		width: 66.66666667%;
+		border-radius: 0.125em;
 	}
 
 	:global(.post-content img.size-1-3) {
 		width: 33.33333333%;
+		border-radius: 0.125em;
 	}
 </style>
