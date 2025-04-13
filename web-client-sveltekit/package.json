@@ -44,6 +44,7 @@
 		"js-cookie": "^3.0.5",
 		"micromark": "^4.0.0",
 		"micromark-extension-directive": "^4.0.0",
+		"micromark-extension-gfm": "^3.0.0",
 		"reset-css": "^5.0.2",
 		"return-fetch": "^0.4.5",
 		"svelte-codemirror-editor": "^1.1.0",
