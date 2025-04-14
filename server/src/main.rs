@@ -45,8 +45,8 @@ async fn main() -> Result<(), lambda_http::Error> {
     let db_connection_str = std::env::var(env_values::DATABASE_URL).unwrap();
 
     let pg_pool = PgPoolOptions::new()
-        .max_connections(5)
-        .acquire_timeout(Duration::from_secs(3))
+        .max_connections(20)
+        .acquire_timeout(Duration::from_secs(20))
         .connect(&db_connection_str)
         .await
         .expect("can't connect to database");
