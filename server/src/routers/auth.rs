@@ -38,7 +38,7 @@
 //             payload.email,
 //             password_hash.unwrap().to_string()
 //         )
-//         .fetch_one(&mut *conn)
+//         .fetch_one(&mut conn)
 //         .await;
 
 //         if result.is_err() {
@@ -131,7 +131,7 @@ pub mod get_access_token {
             "select id, password_hashed from writer where email = $1",
             payload.email
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await;
 
         if result.is_err() {

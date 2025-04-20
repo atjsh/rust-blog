@@ -1,5 +1,5 @@
 use axum::{extract::Path, http::StatusCode, response::IntoResponse};
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::extractors::DatabaseConnection;
@@ -11,14 +11,14 @@ pub mod get_categories {
     struct GetCategoryRow {
         id: i64,
         name: String,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
     }
 
     pub async fn handler(
         DatabaseConnection(mut conn): DatabaseConnection,
     ) -> Result<impl IntoResponse, (StatusCode, String)> {
         let result = sqlx::query_as!(GetCategoryRow, "select id, name, created_at from category")
-            .fetch_all(&mut *conn)
+            .fetch_all(&mut conn)
             .await
             .unwrap();
 
@@ -33,7 +33,7 @@ pub mod get_category {
     struct GetCategoryRow {
         id: i64,
         name: String,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
     }
 
     pub async fn handler(
@@ -45,7 +45,7 @@ pub mod get_category {
             "select id, name, created_at from category where id = $1",
             category_id
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await
         .unwrap();
 
@@ -60,7 +60,7 @@ pub mod get_category_posts {
         id: i64,
 
         title: String,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -74,7 +74,7 @@ pub mod get_category_posts {
         id: i64,
 
         title: String,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -138,7 +138,7 @@ pub mod get_category_posts {
             "#,
             category_id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 

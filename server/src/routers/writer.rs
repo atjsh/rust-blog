@@ -1,5 +1,5 @@
 use axum::{extract::Path, http::StatusCode, response::IntoResponse, Json};
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::extractors::{AuthedWriter, DatabaseConnection};
@@ -33,7 +33,7 @@ pub mod get_writer_by_writer_id {
             "#,
             writer_id
         )
-        .fetch_optional(&mut *conn)
+        .fetch_optional(&mut conn)
         .await
         .map(|row| {
             row.map(|row| {
@@ -57,7 +57,7 @@ pub mod get_posts_by_writer_id {
 
         title: String,
         private: bool,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -72,7 +72,7 @@ pub mod get_posts_by_writer_id {
 
         title: String,
         private: bool,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -130,7 +130,7 @@ pub mod get_posts_by_writer_id {
             "#,
             writer_id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 
@@ -167,7 +167,7 @@ pub mod update_writer {
             body.description,
             authed_writer.id
         )
-        .execute(&mut *conn)
+        .execute(&mut conn)
         .await
         .map_err(|_| {
             (
@@ -188,7 +188,7 @@ pub mod get_posts_by_authed_writer {
 
         title: String,
         private: bool,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -203,7 +203,7 @@ pub mod get_posts_by_authed_writer {
 
         title: String,
         private: bool,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -260,7 +260,7 @@ pub mod get_posts_by_authed_writer {
             "#,
             authed_writer.id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 

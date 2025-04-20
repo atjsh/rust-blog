@@ -1,5 +1,5 @@
 use axum::{extract::Path, http::StatusCode, response::IntoResponse};
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::extractors::{AuthedWriter, DatabaseConnection};
@@ -28,7 +28,7 @@ pub mod get_post_by_post_id {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -46,7 +46,7 @@ pub mod get_post_by_post_id {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -113,7 +113,7 @@ pub mod get_post_by_post_id {
             "#,
             post_id
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await
         .unwrap()
         .into_nested_post_info();
@@ -135,7 +135,7 @@ pub mod create_post {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -153,7 +153,7 @@ pub mod create_post {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -247,7 +247,7 @@ pub mod create_post {
             writer_id,
             payload.category_id
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await
         .unwrap();
 
@@ -268,7 +268,7 @@ pub mod update_post {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by_id: i64,
         written_by_email: String,
@@ -286,7 +286,7 @@ pub mod update_post {
         content_type: String,
         private: bool,
         ad: PostAd,
-        created_at: NaiveDateTime,
+        created_at: DateTime<Utc>,
 
         written_by: GetPostByPostIdResponseWrittenBy,
 
@@ -383,7 +383,7 @@ pub mod update_post {
             payload.category_id,
             payload.ad
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await
         .unwrap();
 
@@ -409,7 +409,7 @@ pub mod delete_post {
             post_id,
             writer_id
         )
-        .execute(&mut *conn)
+        .execute(&mut conn)
         .await
         .unwrap();
 
