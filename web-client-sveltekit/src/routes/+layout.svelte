@@ -32,6 +32,9 @@
 					<li>
 						<a href="https://atj.sh">atjsh (전성훈)</a>
 					</li>
+					<li>
+						<a href="https://resume.atj.sh/resume.kor.pdf">이력서 PDF</a>
+					</li>
 				</ul>
 			</div>
 			{#each data.categories as category}
