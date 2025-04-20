@@ -186,6 +186,10 @@ export async function createPostAttachment(
 		}
 	});
 
+	if (response.status !== 200) {
+		throw Error(`Failed to create post attachment: ${await response.text()}`);
+	}
+
 	return (await response.json()) as CreatePostAttachmentResponseData;
 }
 
