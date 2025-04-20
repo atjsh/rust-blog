@@ -186,7 +186,7 @@ export async function createPostAttachment(
 		}
 	});
 
-	if (response.status !== 200) {
+	if (response.ok === false) {
 		throw Error(`Failed to create post attachment: ${await response.text()}`);
 	}
 
