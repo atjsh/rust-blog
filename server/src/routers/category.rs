@@ -18,7 +18,7 @@ pub mod get_categories {
         DatabaseConnection(mut conn): DatabaseConnection,
     ) -> Result<impl IntoResponse, (StatusCode, String)> {
         let result = sqlx::query_as!(GetCategoryRow, "select id, name, created_at from category")
-            .fetch_all(&mut *conn)
+            .fetch_all(&mut conn)
             .await
             .unwrap();
 
@@ -45,7 +45,7 @@ pub mod get_category {
             "select id, name, created_at from category where id = $1",
             category_id
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut conn)
         .await
         .unwrap();
 
@@ -138,7 +138,7 @@ pub mod get_category_posts {
             "#,
             category_id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 

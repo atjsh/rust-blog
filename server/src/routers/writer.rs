@@ -33,7 +33,7 @@ pub mod get_writer_by_writer_id {
             "#,
             writer_id
         )
-        .fetch_optional(&mut *conn)
+        .fetch_optional(&mut conn)
         .await
         .map(|row| {
             row.map(|row| {
@@ -130,7 +130,7 @@ pub mod get_posts_by_writer_id {
             "#,
             writer_id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 
@@ -167,7 +167,7 @@ pub mod update_writer {
             body.description,
             authed_writer.id
         )
-        .execute(&mut *conn)
+        .execute(&mut conn)
         .await
         .map_err(|_| {
             (
@@ -260,7 +260,7 @@ pub mod get_posts_by_authed_writer {
             "#,
             authed_writer.id
         )
-        .fetch_all(&mut *conn)
+        .fetch_all(&mut conn)
         .await
         .unwrap();
 
