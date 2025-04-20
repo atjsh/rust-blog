@@ -17,7 +17,7 @@ use http::{
     Method,
 };
 use lambda_http::tower::ServiceBuilder;
-use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 use tower_http::{
     compression::CompressionLayer,
@@ -30,7 +30,7 @@ use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, FromRef)]
 pub struct AppState {
-    db_connect_options: PgConnectOptions,
+    pg_pool: sqlx::PgPool,
 }
 
 #[tokio::main]
@@ -42,12 +42,16 @@ async fn main() -> Result<(), lambda_http::Error> {
         )
         .with(tracing_subscriber::fmt::layer());
 
-    let db_connect_options: PgConnectOptions = std::env::var(env_values::DATABASE_URL)
-        .unwrap()
-        .parse()
-        .unwrap();
+    let db_connection_str = std::env::var(env_values::DATABASE_URL).unwrap();
 
-    let state = AppState { db_connect_options };
+    let pg_pool = PgPoolOptions::new()
+        .max_connections(1)
+        .acquire_timeout(Duration::from_secs(2))
+        .connect(&db_connection_str)
+        .await
+        .expect("can't connect to database");
+
+    let state = AppState { pg_pool };
 
     let cors = CorsLayer::new()
         .allow_methods([

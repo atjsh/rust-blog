@@ -113,7 +113,7 @@ pub mod get_post_by_post_id {
             "#,
             post_id
         )
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .unwrap()
         .into_nested_post_info();
@@ -247,7 +247,7 @@ pub mod create_post {
             writer_id,
             payload.category_id
         )
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .unwrap();
 
@@ -383,7 +383,7 @@ pub mod update_post {
             payload.category_id,
             payload.ad
         )
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .unwrap();
 
@@ -409,7 +409,7 @@ pub mod delete_post {
             post_id,
             writer_id
         )
-        .execute(&mut conn)
+        .execute(&mut *conn)
         .await
         .unwrap();
 
