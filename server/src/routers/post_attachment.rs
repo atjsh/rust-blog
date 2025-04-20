@@ -35,7 +35,7 @@ pub mod get_post_attachment_by_attachment_id {
             "#,
             attachment_id,
         )
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .unwrap();
 
@@ -178,7 +178,7 @@ pub mod create_post_attachment {
             file_extension,
             mimetype,
         )
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .map_err(|err| {
             (

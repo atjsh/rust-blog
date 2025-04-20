@@ -11,7 +11,7 @@ use axum_extra::{
 };
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
-use sqlx::postgres::PgConnectOptions;
+use sqlx::PgPool;
 
 pub struct AuthedWriter {
     pub id: i32,
@@ -38,7 +38,7 @@ struct Claims {
 impl<S> FromRequestParts<S> for AuthedWriter
 where
     S: Send + Sync,
-    PgConnectOptions: FromRef<S>,
+    PgPool: FromRef<S>,
 {
     type Rejection = ErrorResponse;
 
@@ -72,7 +72,7 @@ where
             "select id, email, description from writer where id = $1",
             writer_id
         )
-        .fetch_one(&mut database_connection)
+        .fetch_one(&mut *database_connection)
         .await
         .map_err(|_| unauthorized())
     }
