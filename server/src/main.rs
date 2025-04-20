@@ -46,7 +46,8 @@ async fn main() -> Result<(), lambda_http::Error> {
 
     let pg_pool = PgPoolOptions::new()
         .max_connections(1)
-        .acquire_timeout(Duration::from_secs(2))
+        .acquire_timeout(Duration::from_secs(3))
+        .idle_timeout(Duration::from_secs(3))
         .connect(&db_connection_str)
         .await
         .expect("can't connect to database");
